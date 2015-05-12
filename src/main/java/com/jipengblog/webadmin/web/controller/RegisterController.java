@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jipengblog.webadmin.entity.constant.Sex;
 import com.jipengblog.webadmin.entity.system.SysUser;
-import com.jipengblog.webadmin.service.SysRoleService;
-import com.jipengblog.webadmin.service.SysUserService;
+import com.jipengblog.webadmin.service.system.SysRoleService;
+import com.jipengblog.webadmin.service.system.SysUserService;
 import com.jipengblog.webadmin.utils.security.SignatureUtils;
 
 @Controller

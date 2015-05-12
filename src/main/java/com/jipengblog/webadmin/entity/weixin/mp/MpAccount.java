@@ -12,6 +12,12 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+/**
+ * 微信公众平台，标识公众号唯一性的重要标识，包括ID，secret，token，秘钥等非常重要的信息
+ * 
+ * @author penn
+ *
+ */
 @Entity
 @Table(name = "wx_mp_account")
 public class MpAccount implements Serializable {
@@ -24,10 +30,9 @@ public class MpAccount implements Serializable {
 
 	}
 
-	public MpAccount(Long accountId, String accountName, String appId,
+	public MpAccount(String accountName, String appId,
 			String appSecret, String appToken, String accessToken,
 			Date accessTokenDeadTime) {
-		this.accountId = accountId;
 		this.accountName = accountName;
 		this.appId = appId;
 		this.appSecret = appSecret;
@@ -51,6 +56,9 @@ public class MpAccount implements Serializable {
 
 	@Column(nullable = false, length = 50)
 	private String appToken;// 与微信服务器建立链接时使用的token
+
+	@Column(nullable = false, length = 50)
+	private String encodingAESKey;// 数据传输时对数据进行加密的秘钥
 
 	@Column(nullable = false, length = 50)
 	private String accessToken;// 获得微信高级接口权限时使用的token
@@ -105,6 +113,14 @@ public class MpAccount implements Serializable {
 
 	public void setAccessToken(String accessToken) {
 		this.accessToken = accessToken;
+	}
+
+	public String getEncodingAESKey() {
+		return encodingAESKey;
+	}
+
+	public void setEncodingAESKey(String encodingAESKey) {
+		this.encodingAESKey = encodingAESKey;
 	}
 
 	public Date getAccessTokenDeadTime() {

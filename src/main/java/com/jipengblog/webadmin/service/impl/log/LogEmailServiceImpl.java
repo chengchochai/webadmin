@@ -1,4 +1,4 @@
-package com.jipengblog.webadmin.service.impl;
+package com.jipengblog.webadmin.service.impl.log;
 
 import java.util.Date;
 
@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.jipengblog.webadmin.entity.log.LogEmail;
 import com.jipengblog.webadmin.repository.BaseRepository;
-import com.jipengblog.webadmin.service.LogEmailService;
+import com.jipengblog.webadmin.service.log.LogEmailService;
 
 @Service
 @Transactional

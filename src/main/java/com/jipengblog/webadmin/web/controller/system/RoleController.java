@@ -16,8 +16,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import com.jipengblog.webadmin.entity.system.SysModule;
 import com.jipengblog.webadmin.entity.system.SysRole;
-import com.jipengblog.webadmin.service.SysModuleService;
-import com.jipengblog.webadmin.service.SysRoleService;
+import com.jipengblog.webadmin.service.system.SysModuleService;
+import com.jipengblog.webadmin.service.system.SysRoleService;
 import com.jipengblog.webadmin.web.controller.ParentController;
 
 @Controller

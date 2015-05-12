@@ -12,7 +12,7 @@ import org.apache.log4j.Logger;
 import com.jipengblog.webadmin.entity.constant.LogoutType;
 import com.jipengblog.webadmin.entity.log.LogLogin;
 import com.jipengblog.webadmin.entity.system.SysUser;
-import com.jipengblog.webadmin.service.LogLoginService;
+import com.jipengblog.webadmin.service.log.LogLoginService;
 import com.jipengblog.webadmin.web.common.SessionCons;
 import com.jipengblog.webadmin.web.utils.SpringContextUtil;
 

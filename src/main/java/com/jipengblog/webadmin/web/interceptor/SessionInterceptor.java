@@ -27,7 +27,8 @@ public class SessionInterceptor extends HandlerInterceptorAdapter {
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html;charset=UTF-8");
 		String uri = request.getRequestURI();
-		String[] noInterceptURIs = new String[] { "/login", "/logout", "/index", "/error" };
+		String[] noInterceptURIs = new String[] { "/login", "/logout",
+				"/index", "/error", "/static", "/interface" };
 		boolean beIntercepted = true;// 判断是否需要拦截
 		for (String noInterceptURI : noInterceptURIs) {
 			logger.info("不需要拦截的URI:::" + noInterceptURI);
@@ -37,10 +38,11 @@ public class SessionInterceptor extends HandlerInterceptorAdapter {
 				break;
 			}
 		}
-		
+
 		if (beIntercepted) {
-			logger.info("当前URI["+uri+"]已被拦截,需要做进一步判断......");
-			SysUser loginUser = (SysUser) request.getSession().getAttribute(SessionCons.LOGINED_USER);
+			logger.info("当前URI[" + uri + "]已被拦截,需要做进一步判断......");
+			SysUser loginUser = (SysUser) request.getSession().getAttribute(
+					SessionCons.LOGINED_USER);
 			if (null == loginUser) {
 				logger.info("session无效,需要重新登录");
 				response.sendRedirect("/error/nosession");
@@ -48,13 +50,15 @@ public class SessionInterceptor extends HandlerInterceptorAdapter {
 			} else {
 				boolean hasAuthority = false; // 默认没有权限
 				Map<SysModule, Set<SysResource>> menus = (Map<SysModule, Set<SysResource>>) request
-						.getSession().getAttribute(SessionCons.LOGINED_AUTHORITY);
+						.getSession().getAttribute(
+								SessionCons.LOGINED_AUTHORITY);
 				for (Map.Entry<SysModule, Set<SysResource>> entry : menus
 						.entrySet()) {
-					SysModule module = entry.getKey();
+					//SysModule module = entry.getKey();
 					Set<SysResource> resources = entry.getValue();
 					for (SysResource resource : resources) {
-						if (uri.indexOf(resource.getResourceUri()) != -1) {
+						String validUri = resource.getResourceUri().substring(0, resource.getResourceUri().lastIndexOf("/"));
+						if (uri.indexOf(validUri) != -1) {
 							hasAuthority = true;
 							break;
 						}
@@ -67,9 +71,9 @@ public class SessionInterceptor extends HandlerInterceptorAdapter {
 					logger.info("权限无效,非法访问!!!");
 					response.sendRedirect("/error/403");
 					return false;
-				} 
+				}
 			}
-		} 
+		}
 		logger.info("session和权限都已验证通过,放行......");
 		return super.preHandle(request, response, handler);
 	}

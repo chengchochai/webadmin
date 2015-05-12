@@ -1,4 +1,4 @@
-package com.jipengblog.webadmin.service.impl;
+package com.jipengblog.webadmin.service.impl.log;
 
 import java.util.Date;
 import java.util.List;
@@ -11,7 +11,7 @@ import com.jipengblog.webadmin.entity.constant.LogoutType;
 import com.jipengblog.webadmin.entity.log.LogLogin;
 import com.jipengblog.webadmin.repository.BaseRepository;
 import com.jipengblog.webadmin.repository.PageResults;
-import com.jipengblog.webadmin.service.LogLoginService;
+import com.jipengblog.webadmin.service.log.LogLoginService;
 import com.jipengblog.webadmin.utils.time.TimeUtils;
 import com.jipengblog.webadmin.web.common.WebCons;
 
@@ -58,7 +58,7 @@ public class LogLoginServiceImpl implements LogLoginService {
 		Long errorTimes = baseRepository
 				.countByHql(
 						"select count(*) from LogLogin where successful = ?0 and loginTime >= ?1 and loginName = ?2",
-						Boolean.FALSE, TimeUtils.getTodayZeroPoint(), loginName);
+						Boolean.FALSE, TimeUtils.getZeroOfToday(), loginName);
 		if (errorTimes == null) {
 			errorTimes = 0l;
 		}

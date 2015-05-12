@@ -1,4 +1,4 @@
-package com.jipengblog.webadmin.service;
+package com.jipengblog.webadmin.service.log;
 
 import java.util.List;
 

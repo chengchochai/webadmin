@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import com.jipengblog.webadmin.entity.system.SysResource;
-import com.jipengblog.webadmin.service.SysResourceService;
+import com.jipengblog.webadmin.service.system.SysResourceService;
 import com.jipengblog.webadmin.web.controller.ParentController;
 
 @Controller

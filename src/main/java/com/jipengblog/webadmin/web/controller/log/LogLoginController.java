@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.jipengblog.webadmin.entity.log.LogLogin;
-import com.jipengblog.webadmin.service.LogLoginService;
+import com.jipengblog.webadmin.service.log.LogLoginService;
 import com.jipengblog.webadmin.web.controller.ParentController;
 
 @Controller

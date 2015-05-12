@@ -5,7 +5,7 @@ import javax.servlet.ServletContextListener;
 
 import org.apache.log4j.Logger;
 
-import com.jipengblog.webadmin.service.LogLoginService;
+import com.jipengblog.webadmin.service.log.LogLoginService;
 import com.jipengblog.webadmin.web.utils.SpringContextUtil;
 
 public class MyServletContextListener implements ServletContextListener {

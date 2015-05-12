@@ -1,4 +1,4 @@
-package com.jipengblog.webadmin.service.impl;
+package com.jipengblog.webadmin.service.impl.system;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.jipengblog.webadmin.entity.system.SysUser;
 import com.jipengblog.webadmin.repository.BaseRepository;
-import com.jipengblog.webadmin.service.SysUserService;
+import com.jipengblog.webadmin.service.system.SysUserService;
 
 @Service
 @Transactional
