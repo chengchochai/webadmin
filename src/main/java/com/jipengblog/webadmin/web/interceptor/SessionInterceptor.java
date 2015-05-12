@@ -28,7 +28,7 @@ public class SessionInterceptor extends HandlerInterceptorAdapter {
 		response.setContentType("text/html;charset=UTF-8");
 		String uri = request.getRequestURI();
 		String[] noInterceptURIs = new String[] { "/login", "/logout",
-				"/index", "/error", "/static", "/interface" };
+				"/index", "/error", "/static", "/interfaces" };
 		boolean beIntercepted = true;// 判断是否需要拦截
 		for (String noInterceptURI : noInterceptURIs) {
 			logger.info("不需要拦截的URI:::" + noInterceptURI);
@@ -50,8 +50,7 @@ public class SessionInterceptor extends HandlerInterceptorAdapter {
 			} else {
 				boolean hasAuthority = false; // 默认没有权限
 				Map<SysModule, Set<SysResource>> menus = (Map<SysModule, Set<SysResource>>) request
-						.getSession().getAttribute(
-								SessionCons.LOGINED_AUTHORITY);
+						.getSession().getAttribute(SessionCons.LOGINED_AUTHORITY);
 				for (Map.Entry<SysModule, Set<SysResource>> entry : menus
 						.entrySet()) {
 					//SysModule module = entry.getKey();

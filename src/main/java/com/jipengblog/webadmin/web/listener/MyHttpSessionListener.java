@@ -27,7 +27,6 @@ public class MyHttpSessionListener implements HttpSessionListener,
 	}
 
 	public void sessionDestroyed(HttpSessionEvent event) {
-		
 		LogLoginService logLoginService = (LogLoginService) SpringContextUtil.getBean("logLoginService");
 		LogLogin logLogin = logLoginService.findBySessionId(event.getSession().getId());
 		if(logLogin != null && logLogin.getLogoutTime() == null){

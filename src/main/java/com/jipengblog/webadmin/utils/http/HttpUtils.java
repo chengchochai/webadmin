@@ -86,6 +86,7 @@ public class HttpUtils extends PennUtils {
 		String amount = "100";
 		String spOrderId = String.valueOf(System.currentTimeMillis());
 		String userId = "124996813";
+		String tel = "";
 		String time = String.valueOf(System.currentTimeMillis());
 		//String toValid = "amount"+amount+"spId"+spId+"spOrderId"+spOrderId+"time"+time+"userId"+userId+key;
 		//String toValid = amount+spId+spOrderId+time+userId+key;
@@ -93,7 +94,7 @@ public class HttpUtils extends PennUtils {
 		System.out.println("加密前:::"+toValid);
 		String sign = signatureUtils.encrypt(toValid, "");
 		System.out.println("加密后:::"+sign);
-		url = url+"?spId="+spId+"&amount="+amount+"&spOrderId="+spOrderId+"&userId="+userId+"&time="+time+"&sign="+sign;
+		url = url+"?spId="+spId+"&amount="+amount+"&spOrderId="+spOrderId+"&userId="+userId+"&time="+time+"&sign="+sign+tel;
 		System.out.println(url);
 		//System.out.println(HttpUtils.sendGet(url));
 //		Map<String, String> map = new HashMap<String, String>();

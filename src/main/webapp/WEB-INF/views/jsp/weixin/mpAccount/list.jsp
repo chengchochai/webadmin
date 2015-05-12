@@ -59,15 +59,15 @@
 									<tbody>
 										<c:forEach var="mpAccount" items="${mpAccounts }">
 											<tr>
-												<td>${mpAccount.accountId }</td>
-												<td>${mpAccount.accountName }</td>
+												<td>${mpAccount.mpAccountId }</td>
+												<td>${mpAccount.mpAccountName }</td>
 												<td>${mpAccount.appId }</td>
 												<td>${mpAccount.appSecret }</td>
 												<td>${mpAccount.appToken }</td>
 												<td>${mpAccount.accessToken }</td>
 												<td>${mpAccount.accessTokenDeadTime }</td>
 												<td>
-													<a href="${contextPath}/weixin/mpAccount/edit/${mpAccount.accountId}" class="btn btn-primary btn-xs">编辑</a>
+													<a href="${contextPath}/weixin/mpAccount/edit/${mpAccount.mpAccountId}" class="btn btn-primary btn-xs">编辑</a>
 												</td>
 											</tr>
 										</c:forEach>
@@ -83,7 +83,7 @@
 			</div>
 			<div class="row">
 				<div class="col-lg-2">
-					<a href="${contextPath }/weixin/mpAccount/edit/0" class="btn btn-primary">添加模块</a>
+					<a href="${contextPath }/weixin/mpAccount/edit/0" class="btn btn-primary">添加公众号</a>
 				</div>				
 			</div>
 			<!-- /.row -->

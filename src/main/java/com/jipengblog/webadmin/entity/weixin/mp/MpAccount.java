@@ -19,7 +19,7 @@ import javax.persistence.TemporalType;
  *
  */
 @Entity
-@Table(name = "wx_mp_account")
+@Table(name = "wx_mpAccount")
 public class MpAccount implements Serializable {
 	/**
 	 * 
@@ -30,25 +30,23 @@ public class MpAccount implements Serializable {
 
 	}
 
-	public MpAccount(String accountName, String appId,
-			String appSecret, String appToken, String accessToken,
-			Date accessTokenDeadTime) {
-		this.accountName = accountName;
+	public MpAccount(String mpAccountName, String appId,
+			String appSecret, String appToken,String encodingAESKey) {
+		this.mpAccountName = mpAccountName;
 		this.appId = appId;
 		this.appSecret = appSecret;
 		this.appToken = appToken;
-		this.accessToken = accessToken;
-		this.accessTokenDeadTime = accessTokenDeadTime;
+		this.encodingAESKey = encodingAESKey;
 	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long accountId;// 公众号在本系统的主键标识
+	private Long mpAccountId;// 公众号在本系统的主键标识
 
 	@Column(nullable = false, length = 50)
-	private String accountName;// 公众号在本系统的名称标识
+	private String mpAccountName;// 公众号在本系统的名称标识
 
-	@Column(nullable = false, length = 50)
+	@Column(nullable = false, unique = true, length = 50)
 	private String appId;// 微信分配给公众号的appId
 
 	@Column(nullable = false, length = 50)
@@ -60,27 +58,27 @@ public class MpAccount implements Serializable {
 	@Column(nullable = false, length = 50)
 	private String encodingAESKey;// 数据传输时对数据进行加密的秘钥
 
-	@Column(nullable = false, length = 50)
+	@Column(nullable = true, length = 50)
 	private String accessToken;// 获得微信高级接口权限时使用的token
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(nullable = false)
+	@Column(nullable = true)
 	private Date accessTokenDeadTime;// 获得微信高级接口权限时使用的token的失效时间
 
-	public Long getAccountId() {
-		return accountId;
+	public Long getMpAccountId() {
+		return mpAccountId;
 	}
 
-	public void setAccountId(Long accountId) {
-		this.accountId = accountId;
+	public void setMpAccountId(Long mpAccountId) {
+		this.mpAccountId = mpAccountId;
 	}
 
-	public String getAccountName() {
-		return accountName;
+	public String getMpAccountName() {
+		return mpAccountName;
 	}
 
-	public void setAccountName(String accountName) {
-		this.accountName = accountName;
+	public void setMpAccountName(String mpAccountName) {
+		this.mpAccountName = mpAccountName;
 	}
 
 	public String getAppId() {

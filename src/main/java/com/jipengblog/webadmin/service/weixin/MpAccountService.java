@@ -26,6 +26,13 @@ public interface MpAccountService {
 	 * @return
 	 */
 	MpAccount findByMpAccountId(Long mpAccountId);
+	
+	/**
+	 * 
+	 * @param appId
+	 * @return
+	 */
+	MpAccount findByAppId(String appId);
 
 	/**
 	 * 查询所有的登录日志

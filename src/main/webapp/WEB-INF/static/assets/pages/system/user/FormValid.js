@@ -10,7 +10,8 @@ var FormValid = function() {
 			rules : {
 				loginName : {
 					required : true,
-					remote : {                     
+					remote : { 
+						url : 'checkLoginName/',
 						type : "POST"
 					}
 				},
@@ -41,7 +42,8 @@ var FormValid = function() {
 
 			messages : {
 				loginName : {
-					required : "登录账号不能为空"
+					required : "登录账号不能为空",
+					remote : "登录名已经存在"
 				},
 				loginPass : {
 					required : "登录密码不能为空",

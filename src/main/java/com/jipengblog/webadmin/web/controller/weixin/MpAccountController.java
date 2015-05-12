@@ -1,6 +1,5 @@
 package com.jipengblog.webadmin.web.controller.weixin;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import com.jipengblog.webadmin.entity.weixin.mp.MpAccount;
@@ -27,7 +27,7 @@ public class MpAccountController extends ParentController {
 	private String defaultPath = "/weixin/mpAccount/list";
 
 	/**
-	 * 跳转到module列表
+	 * 跳转到MpAccount列表
 	 * 
 	 * @param session
 	 * @param model
@@ -88,14 +88,12 @@ public class MpAccountController extends ParentController {
 	public String doEdit(
 			Model model,
 			RedirectAttributesModelMap modelMap,
-			@RequestParam("mpAccountId") Long mpAccountId,//
-			@RequestParam(value = "accountName") String accountName,
-			@RequestParam(value = "appId") String appId,
+			@RequestParam(value = "mpAccountId") Long mpAccountId,
+			@RequestParam(value = "mpAccountName") String mpAccountName,
+			@RequestParam(value = "appId", required = false) String appId,
 			@RequestParam(value = "appSecret") String appSecret,
 			@RequestParam(value = "appToken") String appToken,
-			@RequestParam(value = "encodingAESKey") String encodingAESKey,
-			@RequestParam(value = "accessToken") String accessToken,
-			@RequestParam("description") String description) throws Exception {// 资源
+			@RequestParam(value = "encodingAESKey") String encodingAESKey) throws Exception {// 资源
 		String tip = null;
 		try {
 			if (mpAccountId != null && mpAccountId != 0) {
@@ -103,20 +101,19 @@ public class MpAccountController extends ParentController {
 				MpAccount mpAccount = mpAccountService
 						.findByMpAccountId(mpAccountId);
 				if (mpAccount != null) {// 找到模块信息
-					mpAccount.setAccountName(accountName);
-					mpAccount.setAppId(appId);
+					mpAccount.setMpAccountName(mpAccountName);
+					//mpAccount.setAppId(appId);
 					mpAccount.setAppSecret(appSecret);
 					mpAccount.setAppToken(appToken);
 					mpAccount.setEncodingAESKey(encodingAESKey);
-					mpAccount.setAccessToken(accessToken);
 					mpAccountService.update(mpAccount);
 					tip = "公众号账号编辑成功";
 				} else {
 					tip = "没有找到要编辑的公众号账号信息";
 				}
 			} else {
-				MpAccount mpAccount = new MpAccount(accountName, appId,
-						appSecret, appToken, accessToken, new Date());
+				MpAccount mpAccount = new MpAccount(mpAccountName, appId,
+						appSecret, appToken, encodingAESKey);
 				mpAccountService.save(mpAccount);
 				tip = "公众号账号添加成功";
 			}
@@ -128,5 +125,25 @@ public class MpAccountController extends ParentController {
 		}
 		modelMap.addAttribute("tip", tip);
 		return redirect + defaultPath;
+	}
+	
+	/**
+	 * 检测appId的方法
+	 * 
+	 * @param mobile
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/weixin/mpAccount/edit/checkAppId", method = { RequestMethod.POST }, produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public String checkAppId(
+			@RequestParam(value = "appId", required = true) String appId,
+			Model model) {
+		boolean isUsed = true;// 是否可以使用
+		MpAccount apAccount = mpAccountService.findByAppId(appId);
+		if (apAccount != null) {
+			isUsed = false;
+		}
+		return String.valueOf(isUsed);
 	}
 }

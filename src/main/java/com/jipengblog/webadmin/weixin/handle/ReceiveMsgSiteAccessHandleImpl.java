@@ -1,10 +1,15 @@
 package com.jipengblog.webadmin.weixin.handle;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 
+import com.jipengblog.webadmin.entity.weixin.mp.MpAccount;
+import com.jipengblog.webadmin.service.weixin.MpAccountService;
 import com.jipengblog.webadmin.utils.security.SignatureUtils;
 import com.jipengblog.webadmin.utils.security.enums.Algorithm;
 import com.jipengblog.webadmin.utils.sort.SortUtil;
+import com.jipengblog.webadmin.web.utils.SpringContextUtil;
 import com.jipengblog.webadmin.weixin.bean.ReceiveMsgParent;
 import com.jipengblog.webadmin.weixin.bean.ReceiveMsgSiteAccess;
 
@@ -52,8 +57,10 @@ public class ReceiveMsgSiteAccessHandleImpl implements ReceiveMsgHandle {
 		 * 根据验证规则首先对token, timestamp, nonce进行字典排序，然后对排序后的结果进行SHA1加密
 		 * 最后对加密后的字符串和signature进行比较，相同则验证通过，否则失败。
 		 */
-		//String token = AppUtils.getProperty("dodoniuToken");
-		String token = "";//数据库查询得到token
+		MpAccountService mpAccountService = (MpAccountService) SpringContextUtil.getBean("mpAccountService");
+		List<MpAccount> mpAccountList = mpAccountService.findAll();
+		MpAccount mpAccount = mpAccountList.get(0);//获得最后添加的一个微信公众号
+		String token = mpAccount.getAppToken();
 		String result_sort = SortUtil.dictSort(token, sa.getTimestamp(),sa.getNonce());
 		SignatureUtils signatureUtils = new SignatureUtils(Algorithm.SHA1);
 		String result_encode = signatureUtils.encrypt(result_sort, SignatureUtils.NO_SALT);

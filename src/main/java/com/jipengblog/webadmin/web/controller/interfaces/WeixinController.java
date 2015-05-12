@@ -1,4 +1,4 @@
-package com.jipengblog.webadmin.web.controller.webservice;
+package com.jipengblog.webadmin.web.controller.interfaces;
 
 import java.io.IOException;
 
@@ -18,7 +18,7 @@ import com.jipengblog.webadmin.weixin.handle.ReceiveMsgHandle;
 @Controller
 public class WeixinController extends ParentController {
 
-	@RequestMapping(value = "/interface/wx", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/interfaces/weixin/mp", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public String wx(HttpServletRequest request) {
 		String result = "";
