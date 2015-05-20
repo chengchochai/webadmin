@@ -37,7 +37,9 @@ public class MyHttpSessionListener implements HttpSessionListener,
 		
 		logger.info("SessionDestroyed：" + event.getSession().getId());
 		SysUser loginUser = (SysUser) event.getSession().getAttribute(SessionCons.LOGINED_USER);
-		logger.info("有人登出：" + loginUser.getLoginName());
+		if(loginUser!=null){
+			logger.info("有人登出：" + loginUser.getLoginName());
+		}
 	}
 
 	public void attributeAdded(HttpSessionBindingEvent event) {

@@ -55,7 +55,7 @@
 											<th>登出方式</th>
 										</tr>
 									</thead>
-									<tbody>
+									<%-- <tbody>
 										<c:forEach var="log" items="${logs }">
 											<tr>
 												<td>${log.logId }</td>
@@ -73,7 +73,7 @@
 												</td>
 											</tr>
 										</c:forEach>
-									</tbody>
+									</tbody> --%>
 								</table>
 							</div>
 							<!-- /.table-responsive -->
@@ -105,7 +105,8 @@
 				"language": {
 	                 "lengthMenu": "每页 _MENU_ 条记录",
 	                 "zeroRecords": "没有找到记录",
-	                 "info": "第 _PAGE_ 页 ( 总共 _PAGES_ 页 )",
+	                 //"info": "第 _PAGE_ 页 ( 总共 _PAGES_ 页 )",
+	                 "info": "从 _START_ 到 _END_ 条，共 _TOTAL_ 条记录",
 	                 "infoEmpty": "没有记录",
 	                 "infoFiltered": "(从 _MAX_ 条记录中过滤)",
 	                 "search" : "搜索:",
@@ -114,10 +115,30 @@
 	                     "first":"首页",
 	                     "last":"末页",
 	                     "next":"下页",
-	                     "previous":"下页"
+	                     "previous":"上页"
 	                 }
 	             },
-				responsive : true
+				responsive : true,
+				bSort : false,// 排序
+				bFilter : false,// 搜索
+				searching : false,// 搜索
+				bLengthChange : false,// 页面大小
+				responsive : true,//
+				serverSide : true,// 开启异步数据加载
+				pagingType : 'full_numbers',// 显示首页和尾页
+				sAjaxSource : '${contextPath }/log/login/tableData/',
+				fnServerData : function(sSource, aDataSet, fnCallback) {
+					$.ajax({
+						"dataType" : 'json',
+						"type" : "POST",
+						"data" : {
+							start:aDataSet[3].value,
+							limit:aDataSet[4].value
+						},
+						"url" : sSource,
+						"success" : fnCallback
+					});
+				}
 			});
 		});
 	</script>

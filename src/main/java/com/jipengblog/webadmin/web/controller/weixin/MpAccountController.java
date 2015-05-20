@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
-import com.jipengblog.webadmin.entity.weixin.mp.MpAccount;
+import com.jipengblog.webadmin.entity.weixin.MpAccount;
 import com.jipengblog.webadmin.service.weixin.MpAccountService;
 import com.jipengblog.webadmin.web.controller.ParentController;
 

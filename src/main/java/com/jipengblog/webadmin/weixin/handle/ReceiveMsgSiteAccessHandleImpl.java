@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import com.jipengblog.webadmin.entity.weixin.mp.MpAccount;
+import com.jipengblog.webadmin.entity.weixin.MpAccount;
 import com.jipengblog.webadmin.service.weixin.MpAccountService;
 import com.jipengblog.webadmin.utils.security.SignatureUtils;
 import com.jipengblog.webadmin.utils.security.enums.Algorithm;

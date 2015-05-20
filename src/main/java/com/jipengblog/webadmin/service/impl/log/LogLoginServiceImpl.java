@@ -39,9 +39,7 @@ public class LogLoginServiceImpl implements LogLoginService {
 	}
 
 	@Override
-	public PageResults<LogLogin> findListByPageResults(int pageNo, int pageSize) {
-		String hql = "";
-		String countHql = "";
+	public PageResults<LogLogin> findListByPageResults(String hql, String countHql, int pageNo, int pageSize) {
 		PageResults<LogLogin> pageResults = baseRepository
 				.findPageByFetchedHql(hql, countHql, pageNo, pageSize, null);
 		return pageResults;
@@ -69,7 +67,7 @@ public class LogLoginServiceImpl implements LogLoginService {
 	public int updateAllLogLogout() {
 		return baseRepository
 				.queryHql(
-						"update LogLogin set loginoutTime = ?0, loginoutType=?1 where loginoutTime is null and loginoutType is null",
+						"update LogLogin set logoutTime = ?0, logoutType=?1 where logoutTime is null and logoutType is null",
 						new Date(), LogoutType.SYSTEMSHUTDOWN);
 
 	}

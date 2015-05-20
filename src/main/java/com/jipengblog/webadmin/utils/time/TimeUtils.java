@@ -53,6 +53,16 @@ public class TimeUtils {
 		Timestamp now = new Timestamp(timestap*1000);
 		return df.format(now);
 	}
+	
+	/**
+	 * 日期时间戳转换成yyyy-MM-dd HH:mm:ss
+	 * @param java.util.Date
+	 * @return
+	 */
+	public static String timestapToString(Date date) {
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		return df.format(date);
+	}
 
 	/**
 	 * 日期时间戳转换成Date
@@ -68,10 +78,8 @@ public class TimeUtils {
 	public static void main(String[] args) {
 		int time = 1;
 		System.out.println(TimeUtils.timestapToDate(time));
-//		Date now = new Date();
-//		Date later = TimeUtils.addTime(now, TimeUnit.DATE, -1);
-//		System.out.println(now);
-//		System.out.println(later);
+		Date now = new Date();
+		System.out.println(TimeUtils.timestapToString(now));
 	}
 
 }

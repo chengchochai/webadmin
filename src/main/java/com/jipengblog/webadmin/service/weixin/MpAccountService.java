@@ -2,7 +2,7 @@ package com.jipengblog.webadmin.service.weixin;
 
 import java.util.List;
 
-import com.jipengblog.webadmin.entity.weixin.mp.MpAccount;
+import com.jipengblog.webadmin.entity.weixin.MpAccount;
 
 public interface MpAccountService {
 
@@ -19,14 +19,14 @@ public interface MpAccountService {
 	 * @param logLogin
 	 */
 	void update(MpAccount mpAccount);
-	
+
 	/**
 	 * 
 	 * @param mpAccountId
 	 * @return
 	 */
 	MpAccount findByMpAccountId(Long mpAccountId);
-	
+
 	/**
 	 * 
 	 * @param appId
@@ -34,13 +34,6 @@ public interface MpAccountService {
 	 */
 	MpAccount findByAppId(String appId);
 
-	/**
-	 * 查询所有的登录日志
-	 * 
-	 * @return
-	 */
 	List<MpAccount> findAll();
-
-	
 
 }

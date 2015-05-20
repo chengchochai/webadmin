@@ -33,7 +33,7 @@ public interface LogLoginService {
 	 * 
 	 * @return
 	 */
-	PageResults<LogLogin> findListByPageResults(int pageNo, int pageSize);
+	PageResults<LogLogin> findListByPageResults(String hql, String countHql, int pageNo, int pageSize);
 	
 	/**
 	 * 查询所有的登录日志
