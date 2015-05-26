@@ -54,25 +54,6 @@
 											<th>操作</th>
 										</tr>
 									</thead>
-									<tbody>
-										<c:forEach var="user" items="${users }">
-											<tr>
-												<td>${user.userId }</td>
-												<td>${user.loginName }</td>
-												<td>${user.realName }</td>
-												<td>${user.email }</td>
-												<td>${user.mobile }</td>
-												<td>
-													<c:if test="${user.enabled==true }">可用</c:if>
-													<c:if test="${user.enabled==false }">禁用</c:if>
-												</td>
-												<td>
-													<a href="${contextPath}/system/user/edit/${user.userId}" class="btn btn-primary btn-xs">编辑</a>
-													<a onclick="if(!confirm('确定要删除吗?'))return false;" href="${contextPath}/system/user/del/${user.userId}" class="btn btn-danger btn-xs">删除</a>
-												</td>
-											</tr>
-										</c:forEach>
-									</tbody>
 								</table>
 							</div>
 							<!-- /.table-responsive -->
@@ -99,26 +80,45 @@
 	<!-- Custom Theme JavaScript -->
 	<script src="${contextPath}/static/assets/sbadmin/js/sb-admin-2.js"></script>
 	<script>
-		$(document).ready(function() {
-			$('#dataTables').DataTable({
-				"language": {
-	                 "lengthMenu": "每页 _MENU_ 条记录",
-	                 "zeroRecords": "没有找到记录",
-	                 "info": "第 _PAGE_ 页 ( 总共 _PAGES_ 页 )",
-	                 "infoEmpty": "没有记录",
-	                 "infoFiltered": "(从 _MAX_ 条记录中过滤)",
-	                 "search" : "搜索:",
-	                 "loadingRecords": "加载中...",	
-	                 "paginate": {
-	                     "first":"首页",
-	                     "last":"末页",
-	                     "next":"下页",
-	                     "previous":"下页"
-	                 }
-	             },
-				responsive : true
-			});
+	$(document).ready(function() {
+		$('#dataTables').DataTable({
+			"language": {
+                 "zeroRecords": "没有找到记录",
+                 "info": "从 _START_ 到 _END_ 条，共 _TOTAL_ 条记录",
+                 "infoEmpty": "没有记录",
+                 "processing" : "加载中...",
+                 "paginate": {
+                     "first":"首页",
+                     "last":"末页",
+                     "next":"下页",
+                     "previous":"上页"
+                 }
+             },
+			responsive : true,
+			processing : true,
+			bSort : false,// 排序
+			bFilter : false,// 搜索
+			searching : false,// 搜索
+			bLengthChange : false,// 页面大小
+			serverSide : true,// 开启异步数据加载
+			pagingType : 'full_numbers',// 显示首页和尾页
+			sAjaxSource : '${contextPath }/system/user/fillData',
+			fnServerData : function(sSource, aDataSet, fnCallback) {
+				//alert(JSON.stringify(aDataSet));
+				$.ajax({
+					"dataType" : 'json',
+					"type" : "POST",
+					"data" : {
+						start:aDataSet[3].value,
+						limit:aDataSet[4].value,
+						sEcho:aDataSet[0].value
+					},
+					"url" : sSource,
+					"success" : fnCallback
+				});
+			}
 		});
+	});
 	</script>
 </body>
 

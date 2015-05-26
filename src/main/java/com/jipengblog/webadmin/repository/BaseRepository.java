@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
+import org.hibernate.criterion.DetachedCriteria;
+
 @SuppressWarnings("all")
 public interface BaseRepository<T, ID extends Serializable> {
 
@@ -40,6 +42,22 @@ public interface BaseRepository<T, ID extends Serializable> {
 	 * @return 查询出来的实体
 	 */
 	public abstract T get(ID id);
+
+	/**
+	 * <refresh>
+	 * 
+	 * @param t
+	 *            实体
+	 */
+	public abstract void refresh(T t);
+
+	/**
+	 * <update>
+	 * 
+	 * @param t
+	 *            实体
+	 */
+	public abstract void update(T t);
 
 	/**
 	 * <contains>
@@ -151,22 +169,6 @@ public interface BaseRepository<T, ID extends Serializable> {
 			final Object... values);
 
 	/**
-	 * <refresh>
-	 * 
-	 * @param t
-	 *            实体
-	 */
-	public abstract void refresh(T t);
-
-	/**
-	 * <update>
-	 * 
-	 * @param t
-	 *            实体
-	 */
-	public abstract void update(T t);
-
-	/**
 	 * <根据HQL得到记录数>
 	 * 
 	 * @param hql
@@ -187,12 +189,26 @@ public interface BaseRepository<T, ID extends Serializable> {
 	 * @param pageNo
 	 *            下一页
 	 * @param pageSize
-	 *            一页总条数
+	 *            每一页总条数
 	 * @param values
 	 *            不定Object数组参数
 	 * @return PageResults的封装类，里面包含了页码的信息以及查询的数据List集合
 	 */
 	public abstract PageResults<T> findPageByFetchedHql(String hql,
 			String countHql, int pageNo, int pageSize, Object... values);
+
+	/**
+	 * 通过DetachedCriteria进行条件查询并分页
+	 * 
+	 * @param dc
+	 *            DetachedCriteria的实例
+	 * @param pageNo
+	 *            第几页
+	 * @param pageSize
+	 *            每一页显示记录的条数
+	 * @return
+	 */
+	public abstract PageResults<T> findPageByDetachedCriteria(
+			final DetachedCriteria dc, int pageNo, int pageSize);
 
 }

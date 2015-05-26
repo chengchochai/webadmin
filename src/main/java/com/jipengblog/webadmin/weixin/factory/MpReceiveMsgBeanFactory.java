@@ -8,7 +8,7 @@ import org.dom4j.Element;
 
 import com.jipengblog.webadmin.utils.DocumentUtil;
 import com.jipengblog.webadmin.utils.StreamUtil;
-import com.jipengblog.webadmin.utils.time.TimeUtils;
+import com.jipengblog.webadmin.utils.time.DateUtils;
 import com.jipengblog.webadmin.weixin.bean.ReceiveMsgParent;
 import com.jipengblog.webadmin.weixin.bean.ReceiveMsgSiteAccess;
 import com.jipengblog.webadmin.weixin.bean.ReceiveMsgText;
@@ -26,7 +26,7 @@ public class MpReceiveMsgBeanFactory {
 				ReceiveMsgText txtMsg = new ReceiveMsgText();
 				txtMsg.setFromUsername(root.elementText("FromUserName"));
 				txtMsg.setToUsername(root.elementText("ToUserName"));
-				txtMsg.setCreateTime(TimeUtils.timestapToDate(Integer.parseInt((root.elementText("CreateTime")))));
+				txtMsg.setCreateTime(DateUtils.timestapToDate(Integer.parseInt((root.elementText("CreateTime")))));
 				txtMsg.setMsgType(msgType);
 				txtMsg.setMsgId(root.elementText("MsgId"));
 				txtMsg.setContent(root.elementText("Content"));
@@ -35,7 +35,7 @@ public class MpReceiveMsgBeanFactory {
 				ReceiveMsgParent msg = new ReceiveMsgParent();
 				msg.setFromUsername(root.elementText("FromUserName"));
 				msg.setToUsername(root.elementText("ToUserName"));
-				msg.setCreateTime(TimeUtils.timestapToDate(Integer.parseInt(root.elementText("CreateTime"))));
+				msg.setCreateTime(DateUtils.timestapToDate(Integer.parseInt(root.elementText("CreateTime"))));
 				msg.setMsgType(msgType);
 				msg.setMsgId(root.elementText("MsgId"));
 				return msg;

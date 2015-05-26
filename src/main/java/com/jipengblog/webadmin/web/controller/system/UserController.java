@@ -6,6 +6,9 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,9 +22,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 import com.jipengblog.webadmin.entity.constant.Sex;
 import com.jipengblog.webadmin.entity.system.SysRole;
 import com.jipengblog.webadmin.entity.system.SysUser;
+import com.jipengblog.webadmin.repository.PageResults;
 import com.jipengblog.webadmin.service.system.SysRoleService;
 import com.jipengblog.webadmin.service.system.SysUserService;
 import com.jipengblog.webadmin.utils.security.SignatureUtils;
+import com.jipengblog.webadmin.web.common.DataTablesPojo;
 import com.jipengblog.webadmin.web.common.SessionCons;
 import com.jipengblog.webadmin.web.controller.ParentController;
 
@@ -51,11 +56,8 @@ public class UserController extends ParentController {
 			} else {
 				super.pageTip = null;
 			}
-			List<SysUser> users = userService.findAll();
-			model.addAttribute("users", users);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error("用户列表错误:::" + e.getMessage());
 			super.pageTip = "系统错误";
 		}
 		model.addAttribute("pageTip", pageTip);
@@ -116,8 +118,7 @@ public class UserController extends ParentController {
 	 */
 	@RequestMapping(value = "/system/user/edit", method = { RequestMethod.POST })
 	public String doEdit(
-			Model model,
-			RedirectAttributesModelMap modelMap,
+			Model model, RedirectAttributesModelMap modelMap,
 			@RequestParam(value = "userId") Long userId,// 用户Id
 			@RequestParam(value = "loginName", required = false) String loginName, // 登录名称
 			@RequestParam(value = "loginPass") String loginPass, // 登录密码
@@ -191,6 +192,33 @@ public class UserController extends ParentController {
 			isUsed = false;
 		}
 		return String.valueOf(isUsed);
+	}
+	
+	@RequestMapping(value = "/system/user/fillData", method = { RequestMethod.POST }, produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public String tableData(
+			HttpSession session,
+			@RequestParam(value = "sEcho", required = true) Integer sEcho,
+			@RequestParam(value = "start", required = true) Integer start,
+			@RequestParam(value = "limit", required = true) Integer limit){
+		String hql = "from SysUser order by createTime desc";
+		PageResults<SysUser> pageResults = userService.findListByPageResults(hql, "select count(*) " + hql, (start/limit) + 1, limit);
+		List<SysUser> results = pageResults.getResults();
+		JSONArray jsonArr = new JSONArray();
+		for(SysUser sysUser : results){
+			JSONArray jsonObj = new JSONArray();
+			jsonObj.add(sysUser.getUserId());
+			jsonObj.add(sysUser.getLoginName());
+			jsonObj.add(sysUser.getRealName());
+			jsonObj.add(sysUser.getEmail());
+			jsonObj.add(sysUser.getMobile());
+			jsonObj.add(sysUser.getEnabled()?"可用":"禁用");
+			String operator = "<a href=\"edit/"+sysUser.getUserId()+"\" class=\"btn btn-primary btn-xs\">编辑</a>&nbsp;" + "<a onclick=\"if(!confirm('确定要删除吗?'))return false;\" href=\"del/"+sysUser.getUserId()+"\" class=\"btn btn-danger btn-xs\">删除</a>";
+			jsonObj.add(operator);
+			jsonArr.add(jsonObj);
+		}
+		DataTablesPojo dataTablesPojo = new DataTablesPojo(sEcho,pageResults.getTotalCount(),pageResults.getTotalCount(),jsonArr);
+		return JSONObject.fromObject(dataTablesPojo).toString();
 	}
 
 	/**

@@ -14,10 +14,14 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.ScrollableResults;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Projections;
 import org.hibernate.jdbc.Work;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -93,6 +97,30 @@ public class BaseRepositoryImpl<T, ID extends Serializable> implements
 	public T get(ID id) {
 		T load = (T) this.getSession().get(getEntityClass(), id);
 		return load;
+	}
+	
+	/**
+	 * <refresh>
+	 * 
+	 * @param t
+	 *            实体
+	 * @see com.itv.launcher.util.IBaseDao#refresh(java.lang.Object)
+	 */
+	@Override
+	public void refresh(T t) {
+		this.getSession().refresh(t);
+	}
+
+	/**
+	 * <update>
+	 * 
+	 * @param t
+	 *            实体
+	 * @see com.itv.launcher.util.IBaseDao#update(java.lang.Object)
+	 */
+	@Override
+	public void update(T t) {
+		this.getSession().update(t);
 	}
 
 	/**
@@ -329,30 +357,6 @@ public class BaseRepositoryImpl<T, ID extends Serializable> implements
 	}
 
 	/**
-	 * <refresh>
-	 * 
-	 * @param t
-	 *            实体
-	 * @see com.itv.launcher.util.IBaseDao#refresh(java.lang.Object)
-	 */
-	@Override
-	public void refresh(T t) {
-		this.getSession().refresh(t);
-	}
-
-	/**
-	 * <update>
-	 * 
-	 * @param t
-	 *            实体
-	 * @see com.itv.launcher.util.IBaseDao#update(java.lang.Object)
-	 */
-	@Override
-	public void update(T t) {
-		this.getSession().update(t);
-	}
-
-	/**
 	 * <根据HQL得到记录数>
 	 * 
 	 * @param hql
@@ -394,7 +398,7 @@ public class BaseRepositoryImpl<T, ID extends Serializable> implements
 	@Override
 	public PageResults<T> findPageByFetchedHql(String hql, String countHql,
 			int pageNo, int pageSize, Object... values) {
-		PageResults<T> retValue = new PageResults<T>();
+		PageResults<T> pageResults = new PageResults<T>();
 		Query query = this.getSession().createQuery(hql);
 		if (values != null) {
 			for (int i = 0; i < values.length; i++) {
@@ -402,25 +406,42 @@ public class BaseRepositoryImpl<T, ID extends Serializable> implements
 			}
 		}
 		int currentPage = pageNo > 1 ? pageNo : 1;
-		retValue.setCurrentPage(currentPage);
-		retValue.setPageSize(pageSize);
+		pageResults.setCurrentPage(currentPage);
+		pageResults.setPageSize(pageSize);
 		if (countHql == null) {
 			ScrollableResults results = query.scroll();
 			results.last();
-			retValue.setTotalCount(results.getRowNumber() + 1);// 设置总记录数
+			pageResults.setTotalCount(results.getRowNumber() + 1);// 设置总记录数
 		} else {
 			Long count = countByHql(countHql, values);
-			retValue.setTotalCount(count.intValue());
+			pageResults.setTotalCount(count.intValue());
 		}
-		retValue.resetPageNo();
+		pageResults.resetPageNo();
 		List<T> itemList = query.setFirstResult((currentPage - 1) * pageSize)
 				.setMaxResults(pageSize).list();
 		if (itemList == null) {
 			itemList = new ArrayList<T>();
 		}
-		retValue.setResults(itemList);
+		pageResults.setResults(itemList);
 
-		return retValue;
+		return pageResults;
+	}
+
+	@Override
+	public PageResults<T> findPageByDetachedCriteria(final DetachedCriteria dc,
+			int pageNo, int pageSize) {
+		PageResults<T> pageResults = new PageResults<T>();
+		Criteria criteria = dc.getExecutableCriteria(getSession()); 
+		int currentPage = pageNo > 1 ? pageNo : 1;
+		pageResults.setCurrentPage(currentPage);
+		pageResults.setPageSize(pageSize);
+		long count =((Long)criteria.setProjection(Projections.rowCount()).uniqueResult()).longValue();
+		pageResults.setTotalCount((int)count);
+		criteria.setProjection(null);
+		criteria.setResultTransformer(CriteriaSpecification.ROOT_ENTITY);
+		List itemList = criteria.setFirstResult(pageNo).setMaxResults(pageSize).list(); 
+		pageResults.setResults(itemList);
+		return pageResults;
 	}
 
 	/**
@@ -482,7 +503,5 @@ public class BaseRepositoryImpl<T, ID extends Serializable> implements
 			// 未知类型
 			ps.setObject(pos + 1, data);
 		}
-
 	}
-
 }

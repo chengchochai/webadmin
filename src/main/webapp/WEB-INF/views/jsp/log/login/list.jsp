@@ -10,13 +10,16 @@
 <link href="${contextPath}/static/assets/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.css" rel="stylesheet">
 <!-- DataTables Responsive CSS -->
 <link href="${contextPath}/static/assets/bower_components/datatables-responsive/css/dataTables.responsive.css" rel="stylesheet">
+<!-- Bootstrap-datetimepicker CSS -->
+<link href="${contextPath}/static/assets/bower_components/bootstrap/dist/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
 <!-- Custom CSS -->
 <link href="${contextPath}/static/assets/sbadmin/css/sb-admin-2.css" rel="stylesheet">
 </head>
 <body>
 	<div id="wrapper">
 		<!-- Navigation -->
-		<nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+		<nav class="navbar navbar-default navbar-static-top" role="navigation"
+			style="margin-bottom: 0">
 			<!-- header -->
 			<%@ include file="/WEB-INF/static/common/header.jsp"%>
 			<!-- navigation -->
@@ -34,16 +37,31 @@
 				<div class="col-lg-12">
 					<div class="panel panel-primary">
 						<div class="panel-heading">模块列表</div>
+						<div class="panel-body">
+							<form id="searchForm" role="form">
+								&nbsp;&nbsp;登录时间:
+								<input name="startTime" size="18" type="text" value="" class="form_datetime" readonly>到<input name="endTime" size="18" type="text" value="" class="form_datetime" readonly>
+								&nbsp;&nbsp;登录名:
+								<input name="loginName" size="12"/>
+								&nbsp;&nbsp;登录IP:
+								<input name="loginIp" size="14"/>
+								<button type="button" id="searchButton" class="btn btn-default btn-xs">搜索</button>
+							</form>
+						</div>
 						<!-- /.panel-heading -->
 						<div class="panel-body">
-							<c:if test="${pageTip!=null && pageTip!=''}"><!-- 页面提示 -->
-								<div class="alert <c:if test="${fn:contains(pageTip,'成功') }">alert-success</c:if><c:if test="${!fn:contains(pageTip,'成功') }">alert-danger</c:if> alert-dismissable">
-	                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-	                                ${pageTip}
-	                            </div>
-                            </c:if>
+							<c:if test="${pageTip!=null && pageTip!=''}">
+								<!-- 页面提示 -->
+								<div
+									class="alert <c:if test="${fn:contains(pageTip,'成功') }">alert-success</c:if><c:if test="${!fn:contains(pageTip,'成功') }">alert-danger</c:if> alert-dismissable">
+									<button type="button" class="close" data-dismiss="alert"
+										aria-hidden="true">&times;</button>
+									${pageTip}
+								</div>
+							</c:if>
 							<div class="dataTable_wrapper">
-								<table class="table table-striped table-bordered table-hover" id="dataTables">
+								<table class="table table-striped table-bordered table-hover"
+									id="dataTables">
 									<thead>
 										<tr>
 											<th>#</th>
@@ -55,25 +73,6 @@
 											<th>登出方式</th>
 										</tr>
 									</thead>
-									<%-- <tbody>
-										<c:forEach var="log" items="${logs }">
-											<tr>
-												<td>${log.logId }</td>
-												<td>${log.loginName }</td>
-												<td>${log.loginIp }</td>
-												<td>${log.loginTime }</td>
-												<td><abbr title="${log.description }">${log.description }</abbr></td>
-												<td>${log.logoutTime}</td>
-												<td>
-													<c:if test="${log.logoutType=='ACTIVELOGINOUT' }">网页登出</c:if>
-													<c:if test="${log.logoutType=='PASSIVELOGOUT' }">另行登入</c:if>
-													<c:if test="${log.logoutType=='SESSIONFAILURE' }">会话失效</c:if>
-													<c:if test="${log.logoutType=='BROWSERCLOSED' }">浏览器关闭</c:if>
-													<c:if test="${log.logoutType=='SYSTEMSHUTDOWN' }">系统关闭</c:if>
-												</td>
-											</tr>
-										</c:forEach>
-									</tbody> --%>
 								</table>
 							</div>
 							<!-- /.table-responsive -->
@@ -85,8 +84,9 @@
 			</div>
 			<div class="row">
 				<div class="col-lg-2">
-					<a href="${contextPath }/system/module/edit/0" class="btn btn-primary">添加模块</a>
-				</div>				
+					<a href="${contextPath }/system/module/edit/0"
+						class="btn btn-primary">添加模块</a>
+				</div>
 			</div>
 			<!-- /.row -->
 		</div>
@@ -97,51 +97,21 @@
 	<%@ include file="/WEB-INF/static/common/javascript.jsp"%>
 	<script src="${contextPath}/static/assets/bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
 	<script src="${contextPath}/static/assets/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+	<script src="${contextPath}/static/assets/bower_components/bootstrap/dist/js/bootstrap-datetimepicker.js"></script>
+	<script src="${contextPath}/static/assets/bower_components/bootstrap/dist/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
 	<!-- Custom Theme JavaScript -->
 	<script src="${contextPath}/static/assets/sbadmin/js/sb-admin-2.js"></script>
+	<script src="${contextPath}/static/assets/pages/dataTable.js"></script>
 	<script>
-		$(document).ready(function() {
-			$('#dataTables').DataTable({
-				"language": {
-	                 "lengthMenu": "每页 _MENU_ 条记录",
-	                 "zeroRecords": "没有找到记录",
-	                 //"info": "第 _PAGE_ 页 ( 总共 _PAGES_ 页 )",
-	                 "info": "从 _START_ 到 _END_ 条，共 _TOTAL_ 条记录",
-	                 "infoEmpty": "没有记录",
-	                 "infoFiltered": "(从 _MAX_ 条记录中过滤)",
-	                 "search" : "搜索:",
-	                 "loadingRecords": "加载中...",	
-	                 "paginate": {
-	                     "first":"首页",
-	                     "last":"末页",
-	                     "next":"下页",
-	                     "previous":"上页"
-	                 }
-	             },
-				responsive : true,
-				bSort : false,// 排序
-				bFilter : false,// 搜索
-				searching : false,// 搜索
-				bLengthChange : false,// 页面大小
-				responsive : true,//
-				serverSide : true,// 开启异步数据加载
-				pagingType : 'full_numbers',// 显示首页和尾页
-				sAjaxSource : '${contextPath }/log/login/tableData/',
-				fnServerData : function(sSource, aDataSet, fnCallback) {
-					$.ajax({
-						"dataType" : 'json',
-						"type" : "POST",
-						"data" : {
-							start:aDataSet[3].value,
-							limit:aDataSet[4].value
-						},
-						"url" : sSource,
-						"success" : fnCallback
-					});
-				}
-			});
+		init('${contextPath }/log/login/fillData/');
+		$('.form_datetime').datetimepicker({
+			format: 'yyyy-mm-dd hh:ii:ss',
+			language: 'zh-CN', //汉化 
+			autoclose:true //选择日期后自动关闭 
 		});
+		
 	</script>
+	
 </body>
 
 </html>

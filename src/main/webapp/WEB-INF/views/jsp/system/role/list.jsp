@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/static/common/taglibs.jsp"%>
 <!DOCTYPE html>
 <html lang="zh">
@@ -94,23 +93,42 @@
 		$(document).ready(function() {
 			$('#dataTables').DataTable({
 				"language": {
-	                 "lengthMenu": "每页 _MENU_ 条记录",
 	                 "zeroRecords": "没有找到记录",
-	                 "info": "第 _PAGE_ 页 ( 总共 _PAGES_ 页 )",
+	                 "info": "从 _START_ 到 _END_ 条，共 _TOTAL_ 条记录",
 	                 "infoEmpty": "没有记录",
-	                 "infoFiltered": "(从 _MAX_ 条记录中过滤)",
-	                 "search" : "搜索:",
-	                 "loadingRecords": "加载中...",	
+	                 "processing" : "加载中...",
 	                 "paginate": {
 	                     "first":"首页",
 	                     "last":"末页",
 	                     "next":"下页",
-	                     "previous":"下页"
+	                     "previous":"上页"
 	                 }
 	             },
-				responsive : true
+				responsive : true,
+				processing : true,
+				bSort : false,// 排序
+				bFilter : false,// 搜索
+				searching : false,// 搜索
+				bLengthChange : false,// 页面大小
+				serverSide : true,// 开启异步数据加载
+				pagingType : 'full_numbers',// 显示首页和尾页
+				sAjaxSource : '${contextPath }/system/role/fillData',
+				fnServerData : function(sSource, aDataSet, fnCallback) {
+					$.ajax({
+						"dataType" : 'json',
+						"type" : "POST",
+						"data" : {
+							start:aDataSet[3].value,
+							limit:aDataSet[4].value,
+							sEcho:aDataSet[0].value
+						},
+						"url" : sSource,
+						"success" : fnCallback
+					});
+				}
 			});
 		});
+		
 	</script>
 </body>
 

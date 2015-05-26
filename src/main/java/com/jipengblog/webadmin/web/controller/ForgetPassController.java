@@ -21,7 +21,7 @@ import com.jipengblog.webadmin.utils.email.EmailUtils;
 import com.jipengblog.webadmin.utils.email.constant.EmailTemplate;
 import com.jipengblog.webadmin.utils.security.SignatureUtils;
 import com.jipengblog.webadmin.utils.security.enums.Algorithm;
-import com.jipengblog.webadmin.utils.time.TimeUtils;
+import com.jipengblog.webadmin.utils.time.DateUtils;
 import com.jipengblog.webadmin.utils.time.constant.TimeUnit;
 
 import static com.jipengblog.webadmin.web.common.WebCons.*;
@@ -47,7 +47,7 @@ public class ForgetPassController extends ParentController {
 
 			// 初始化参数
 			Date now = new Date();// 当前时间
-			Date deadline = TimeUtils.addTime(now, TimeUnit.DATE, 1);// 截止时间
+			Date deadline = DateUtils.addTime(now, TimeUnit.DATE, 1);// 截止时间
 			EmailTemplate emailTpl = EmailTemplate.RESPONSE_URL;// 邮件模板
 			String emailTplPath = emailTpl.getValue();// 邮件模板的路径
 			EmailType emailType = EmailType.FORGETPASSWORD;// 邮件类型

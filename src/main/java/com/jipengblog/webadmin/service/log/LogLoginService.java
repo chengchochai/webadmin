@@ -2,6 +2,8 @@ package com.jipengblog.webadmin.service.log;
 
 import java.util.List;
 
+import org.hibernate.criterion.DetachedCriteria;
+
 import com.jipengblog.webadmin.entity.log.LogLogin;
 import com.jipengblog.webadmin.repository.PageResults;
 
@@ -29,11 +31,23 @@ public interface LogLoginService {
 	LogLogin findBySessionId(String sessionId);
 
 	/**
-	 * 分页查询登录日志
-	 * 
+	 * 分页查询登陆日志
+	 * @param hql 查询HQL
+	 * @param countHql 记录数HQL
+	 * @param pageNo 当前页
+	 * @param pageSize 每页大小
 	 * @return
 	 */
 	PageResults<LogLogin> findListByPageResults(String hql, String countHql, int pageNo, int pageSize);
+	
+	/**
+	 * 分页查询登陆日志
+	 * @param dc DetachedCriteria
+	 * @param pageNo
+	 * @param pageSize
+	 * @return
+	 */
+	PageResults<LogLogin> findListByDetachedCriteria(DetachedCriteria dc,int pageNo,int pageSize);
 	
 	/**
 	 * 查询所有的登录日志
