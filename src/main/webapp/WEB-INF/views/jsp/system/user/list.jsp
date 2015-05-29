@@ -9,6 +9,8 @@
 <link href="${contextPath}/static/assets/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.css" rel="stylesheet">
 <!-- DataTables Responsive CSS -->
 <link href="${contextPath}/static/assets/bower_components/datatables-responsive/css/dataTables.responsive.css" rel="stylesheet">
+<!-- Bootstrap-datetimepicker CSS -->
+<link href="${contextPath}/static/assets/bower_components/bootstrap/dist/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
 <!-- Custom CSS -->
 <link href="${contextPath}/static/assets/sbadmin/css/sb-admin-2.css" rel="stylesheet">
 </head>
@@ -41,6 +43,15 @@
 	                                ${pageTip}
 	                            </div>
                             </c:if>
+                            <div class="col-lg-12">
+                            	<div id="searchDiv" class="row">
+									创建时间:<input name="startTime" size="18" type="text" class="form_datetime" readonly>
+										到<input name="endTime" size="18" type="text" class="form_datetime" readonly>
+									&nbsp;&nbsp;登录名:<input type="text" name="loginName" size="10"/>
+									&nbsp;&nbsp;手机:<input  type="text" name="mobile" size="12"/>
+									<button type="button" id="searchButton" class="btn btn-default btn-xs">搜索</button>
+                            	</div>
+                            </div>
 							<div class="dataTable_wrapper">
 								<table class="table table-striped table-bordered table-hover" id="dataTables">
 									<thead>
@@ -77,48 +88,13 @@
 	<%@ include file="/WEB-INF/static/common/javascript.jsp"%>
 	<script src="${contextPath}/static/assets/bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
 	<script src="${contextPath}/static/assets/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+	<script src="${contextPath}/static/assets/bower_components/bootstrap/dist/js/bootstrap-datetimepicker.js"></script>
+	<script src="${contextPath}/static/assets/bower_components/bootstrap/dist/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
 	<!-- Custom Theme JavaScript -->
 	<script src="${contextPath}/static/assets/sbadmin/js/sb-admin-2.js"></script>
+	<script src="${contextPath}/static/assets/pages/dataTable.js"></script>
 	<script>
-	$(document).ready(function() {
-		$('#dataTables').DataTable({
-			"language": {
-                 "zeroRecords": "没有找到记录",
-                 "info": "从 _START_ 到 _END_ 条，共 _TOTAL_ 条记录",
-                 "infoEmpty": "没有记录",
-                 "processing" : "加载中...",
-                 "paginate": {
-                     "first":"首页",
-                     "last":"末页",
-                     "next":"下页",
-                     "previous":"上页"
-                 }
-             },
-			responsive : true,
-			processing : true,
-			bSort : false,// 排序
-			bFilter : false,// 搜索
-			searching : false,// 搜索
-			bLengthChange : false,// 页面大小
-			serverSide : true,// 开启异步数据加载
-			pagingType : 'full_numbers',// 显示首页和尾页
-			sAjaxSource : '${contextPath }/system/user/fillData',
-			fnServerData : function(sSource, aDataSet, fnCallback) {
-				//alert(JSON.stringify(aDataSet));
-				$.ajax({
-					"dataType" : 'json',
-					"type" : "POST",
-					"data" : {
-						start:aDataSet[3].value,
-						limit:aDataSet[4].value,
-						sEcho:aDataSet[0].value
-					},
-					"url" : sSource,
-					"success" : fnCallback
-				});
-			}
-		});
-	});
+		init('${contextPath }/system/user/fillData');
 	</script>
 </body>
 

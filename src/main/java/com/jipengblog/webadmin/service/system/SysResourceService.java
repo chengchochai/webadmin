@@ -2,9 +2,14 @@ package com.jipengblog.webadmin.service.system;
 
 import java.util.List;
 
+import org.hibernate.criterion.DetachedCriteria;
+
 import com.jipengblog.webadmin.entity.system.SysResource;
+import com.jipengblog.webadmin.repository.PageResults;
 
 public interface SysResourceService {
+	
+	SysResource findByResourceId(Long resourceId);
 
 	void save(SysResource resource);
 
@@ -13,9 +18,9 @@ public interface SysResourceService {
 	void delete(SysResource resource);
 
 	List<SysResource> findAll();
-
+	
 	List<SysResource> findByResourceIds(Long[] ids);
 
-	SysResource findByResourceId(Long resourceId);
+	PageResults<SysResource> findListByDetachedCriteria(DetachedCriteria dc,int pageNo,int pageSize);
 
 }

@@ -2,8 +2,6 @@ package com.jipengblog.webadmin.web.controller.log;
 
 import java.util.List;
 
-import javax.servlet.http.HttpSession;
-
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -12,7 +10,6 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,7 +31,7 @@ public class LogLoginController extends ParentController {
 	private String defaultPath = "/log/login/list";
 
 	@RequestMapping(value = "/log/login/list", method = { RequestMethod.GET })
-	public String list(HttpSession session, Model model) {
+	public String list() {
 		return defaultPath;
 	}
 	

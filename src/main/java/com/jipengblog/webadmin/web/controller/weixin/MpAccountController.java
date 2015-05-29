@@ -4,6 +4,13 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,7 +22,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import com.jipengblog.webadmin.entity.weixin.MpAccount;
+import com.jipengblog.webadmin.repository.PageResults;
 import com.jipengblog.webadmin.service.weixin.MpAccountService;
+import com.jipengblog.webadmin.web.common.DataTablesPojo;
 import com.jipengblog.webadmin.web.controller.ParentController;
 
 @Controller
@@ -145,5 +154,37 @@ public class MpAccountController extends ParentController {
 			isUsed = false;
 		}
 		return String.valueOf(isUsed);
+	}
+	
+	@RequestMapping(value = "/weixin/mpAccount/fillData", method = { RequestMethod.POST }, produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public String tableData(
+			@RequestParam(value = "appId", required = false) String appId,
+			@RequestParam(value = "sEcho", required = true) Integer sEcho,
+			@RequestParam(value = "start", required = true) Integer start,
+			@RequestParam(value = "limit", required = true) Integer limit){
+		DetachedCriteria dc = DetachedCriteria.forClass(MpAccount.class);
+		if(null!=appId && !"".equals(appId)){
+			dc.add(Restrictions.like("appId", appId, MatchMode.ANYWHERE));
+		}
+		dc.addOrder(Order.desc("mpAccountId"));//排序
+		PageResults<MpAccount> pageResults = mpAccountService.findListByDetachedCriteria(dc, (start/limit) + 1, limit);
+		List<MpAccount> results = pageResults.getResults();
+		JSONArray jsonArr = new JSONArray();
+		for(MpAccount mpAccount : results){
+			JSONArray jsonObj = new JSONArray();
+			jsonObj.add(mpAccount.getMpAccountId());
+			jsonObj.add(mpAccount.getMpAccountName());
+			jsonObj.add(mpAccount.getAppId());
+			jsonObj.add(mpAccount.getAppSecret());
+			jsonObj.add(mpAccount.getAppToken());
+			jsonObj.add(mpAccount.getAccessToken());
+			jsonObj.add(mpAccount.getAccessTokenDeadTime());
+			String operator = "<a href=\"edit/"+mpAccount.getMpAccountId()+"\" class=\"btn btn-primary btn-xs\">编辑</a>";
+			jsonObj.add(operator);
+			jsonArr.add(jsonObj);
+		}
+		DataTablesPojo dataTablesPojo = new DataTablesPojo(sEcho,pageResults.getTotalCount(),pageResults.getTotalCount(),jsonArr);
+		return JSONObject.fromObject(dataTablesPojo).toString();
 	}
 }

@@ -2,8 +2,13 @@ package com.jipengblog.webadmin.web.controller.system;
 
 import java.util.List;
 
-import javax.servlet.http.HttpSession;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,10 +16,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import com.jipengblog.webadmin.entity.system.SysResource;
+import com.jipengblog.webadmin.repository.PageResults;
 import com.jipengblog.webadmin.service.system.SysResourceService;
+import com.jipengblog.webadmin.web.common.DataTablesPojo;
 import com.jipengblog.webadmin.web.controller.ParentController;
 
 @Controller
@@ -33,18 +41,15 @@ public class ResourceController extends ParentController {
 	 * @return
 	 */
 	@RequestMapping(value = "/system/resource/list", method = { RequestMethod.GET })
-	public String list(HttpSession session, Model model, String tip) {
+	public String list(Model model, String tip) {
 		try{
 			if (tip != null) {
 				super.pageTip = new String(tip.trim().getBytes("ISO-8859-1"), "utf-8");
 			}else{
 				super.pageTip = null;
 			}
-			List<SysResource> resources = resourceService.findAll();
-			model.addAttribute("resources", resources);
 		}catch(Exception e){
 			e.printStackTrace();
-			logger.error("资源列表错误:::" + e.getMessage());
 			super.pageTip = "系统未知错误";
 		}
 		model.addAttribute("pageTip",super.pageTip);
@@ -135,5 +140,36 @@ public class ResourceController extends ParentController {
 		}
 		modelMap.addAttribute("tip", tip);
 		return redirect + defaultPath;
+	}
+	
+	@RequestMapping(value = "/system/resource/fillData", method = { RequestMethod.POST }, produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public String tableData(
+			@RequestParam(value = "resourceName", required = false) String resourceName,
+			@RequestParam(value = "sEcho", required = true) Integer sEcho,
+			@RequestParam(value = "start", required = true) Integer start,
+			@RequestParam(value = "limit", required = true) Integer limit){
+		DetachedCriteria dc = DetachedCriteria.forClass(SysResource.class);
+		if(null!=resourceName && !"".equals(resourceName)){
+			dc.add(Restrictions.like("resourceName", resourceName, MatchMode.ANYWHERE));
+		}
+		dc.addOrder(Order.desc("priority"));//排序
+		PageResults<SysResource> pageResults = resourceService.findListByDetachedCriteria(dc, (start/limit) + 1, limit);
+		List<SysResource> results = pageResults.getResults();
+		JSONArray jsonArr = new JSONArray();
+		for(SysResource sysResource : results){
+			JSONArray jsonObj = new JSONArray();
+			jsonObj.add(sysResource.getResourceId());
+			jsonObj.add(sysResource.getResourceName());
+			jsonObj.add(sysResource.getEnabled()?"可用":"禁用");
+			jsonObj.add(sysResource.getPriority());
+			jsonObj.add(sysResource.getResourceUri());
+			jsonObj.add(sysResource.getDescription());
+			String operator = "<a href=\"edit/"+sysResource.getResourceId()+"\" class=\"btn btn-primary btn-xs\">编辑</a>&nbsp;" + "<a onclick=\"if(!confirm('确定要删除吗?'))return false;\" href=\"del/"+sysResource.getResourceId()+"\" class=\"btn btn-danger btn-xs\">删除</a>";
+			jsonObj.add(operator);
+			jsonArr.add(jsonObj);
+		}
+		DataTablesPojo dataTablesPojo = new DataTablesPojo(sEcho,pageResults.getTotalCount(),pageResults.getTotalCount(),jsonArr);
+		return JSONObject.fromObject(dataTablesPojo).toString();
 	}
 }

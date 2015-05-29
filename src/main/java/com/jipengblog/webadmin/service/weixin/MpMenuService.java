@@ -2,9 +2,19 @@ package com.jipengblog.webadmin.service.weixin;
 
 import java.util.List;
 
+import org.hibernate.criterion.DetachedCriteria;
+
 import com.jipengblog.webadmin.entity.weixin.MpMenu;
+import com.jipengblog.webadmin.repository.PageResults;
 
 public interface MpMenuService {
+	
+	/**
+	 * 
+	 * @param 查询所有一级菜单
+	 * @return
+	 */
+	MpMenu findByMpMenuId(Long mpMenuId);
 
 	/**
 	 * 添加MpMenu
@@ -22,13 +32,6 @@ public interface MpMenuService {
 
 	/**
 	 * 
-	 * @param 查询所有一级菜单
-	 * @return
-	 */
-	MpMenu findByMpMenuId(Long mpMenuId);
-
-	/**
-	 * 
 	 * @return
 	 */
 	List<MpMenu> findAllFirstLevelMenu(Long mpAccountId);
@@ -40,5 +43,6 @@ public interface MpMenuService {
 	 * @return
 	 */
 	List<MpMenu> findAllSecondLevelMenu(Integer mpMenuId);
-
+	
+	PageResults<MpMenu> findListByDetachedCriteria(DetachedCriteria dc,int pageNo,int pageSize);
 }

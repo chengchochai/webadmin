@@ -9,6 +9,9 @@ import javax.servlet.http.HttpSession;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,6 +29,7 @@ import com.jipengblog.webadmin.repository.PageResults;
 import com.jipengblog.webadmin.service.system.SysRoleService;
 import com.jipengblog.webadmin.service.system.SysUserService;
 import com.jipengblog.webadmin.utils.security.SignatureUtils;
+import com.jipengblog.webadmin.utils.time.DateUtils;
 import com.jipengblog.webadmin.web.common.DataTablesPojo;
 import com.jipengblog.webadmin.web.common.SessionCons;
 import com.jipengblog.webadmin.web.controller.ParentController;
@@ -48,7 +52,7 @@ public class UserController extends ParentController {
 	 * @return
 	 */
 	@RequestMapping(value = "/system/user/list", method = { RequestMethod.GET })
-	public String list(HttpSession session, Model model, String tip) {
+	public String list(Model model, String tip) {
 		try {
 			if (tip != null) {
 				super.pageTip = new String(tip.trim().getBytes("ISO-8859-1"),
@@ -57,7 +61,6 @@ public class UserController extends ParentController {
 				super.pageTip = null;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			super.pageTip = "系统错误";
 		}
 		model.addAttribute("pageTip", pageTip);
@@ -166,7 +169,6 @@ public class UserController extends ParentController {
 				tip = "用户添加成功";
 			}
 		} catch (Exception e) {
-			logger.error("编辑用户错误:::" + e.getMessage());
 			e.printStackTrace();
 			tip = "系统错误";
 		}
@@ -197,12 +199,28 @@ public class UserController extends ParentController {
 	@RequestMapping(value = "/system/user/fillData", method = { RequestMethod.POST }, produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String tableData(
-			HttpSession session,
+			@RequestParam(value = "startTime", required = false) String startTime,
+			@RequestParam(value = "endTime", required = false) String endTime,
+			@RequestParam(value = "loginName", required = false) String loginName,
+			@RequestParam(value = "mobile", required = false) String mobile,
 			@RequestParam(value = "sEcho", required = true) Integer sEcho,
 			@RequestParam(value = "start", required = true) Integer start,
 			@RequestParam(value = "limit", required = true) Integer limit){
-		String hql = "from SysUser order by createTime desc";
-		PageResults<SysUser> pageResults = userService.findListByPageResults(hql, "select count(*) " + hql, (start/limit) + 1, limit);
+		DetachedCriteria dc = DetachedCriteria.forClass(SysUser.class);
+		if(null!=startTime && !"".equals(startTime)){
+			dc.add(Restrictions.ge("createTime", DateUtils.stringToDate(startTime)));
+		}
+		if(null!=endTime && !"".equals(endTime)){
+			dc.add(Restrictions.le("createTime", DateUtils.stringToDate(endTime)));
+		}
+		if(null!=loginName && !"".equals(loginName)){
+			dc.add(Restrictions.eq("loginName", loginName));	
+		}
+		if(null!=mobile && !"".equals(mobile)){
+			dc.add(Restrictions.eq("mobile", mobile));
+		}
+		dc.addOrder(Order.desc("createTime"));//排序
+		PageResults<SysUser> pageResults = userService.findListByDetachedCriteria(dc, (start/limit) + 1, limit);
 		List<SysUser> results = pageResults.getResults();
 		JSONArray jsonArr = new JSONArray();
 		for(SysUser sysUser : results){

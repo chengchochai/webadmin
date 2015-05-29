@@ -31,9 +31,7 @@ public class SessionInterceptor extends HandlerInterceptorAdapter {
 				"/index", "/error", "/static", "/interfaces" };
 		boolean beIntercepted = true;// 判断是否需要拦截
 		for (String noInterceptURI : noInterceptURIs) {
-			logger.info("不需要拦截的URI:::" + noInterceptURI);
 			if (uri.indexOf(noInterceptURI) != -1) {
-				logger.info("当前访问URI:::" + uri + "不需要拦截");
 				beIntercepted = false;
 				break;
 			}
@@ -45,7 +43,7 @@ public class SessionInterceptor extends HandlerInterceptorAdapter {
 					SessionCons.LOGINED_USER);
 			if (null == loginUser) {
 				logger.info("session无效,需要重新登录");
-				response.sendRedirect("/error/nosession");
+				response.sendRedirect(request.getContextPath()+"/error/nosession");
 				return false;
 			} else {
 				boolean hasAuthority = false; // 默认没有权限
@@ -68,7 +66,7 @@ public class SessionInterceptor extends HandlerInterceptorAdapter {
 				}
 				if (!hasAuthority) {// 无权限
 					logger.info("权限无效,非法访问!!!");
-					response.sendRedirect("/error/403");
+					response.sendRedirect(request.getContextPath()+"/error/403");
 					return false;
 				}
 			}

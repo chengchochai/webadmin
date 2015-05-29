@@ -2,12 +2,14 @@ package com.jipengblog.webadmin.service.impl.system;
 
 import java.util.List;
 
+import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.jipengblog.webadmin.entity.system.SysResource;
 import com.jipengblog.webadmin.repository.BaseRepository;
+import com.jipengblog.webadmin.repository.PageResults;
 import com.jipengblog.webadmin.service.system.SysResourceService;
 
 @Service
@@ -18,6 +20,12 @@ public class SysResourceServiceImpl implements SysResourceService {
 	private BaseRepository<SysResource, Long> baseRepository;
 
 	@Override
+	public SysResource findByResourceId(Long resourceId) {
+		return baseRepository.getOneByHQL(
+				"from SysResource where resourceId = ?0", resourceId);
+	}
+
+	@Override
 	public void save(SysResource resource) {
 		baseRepository.save(resource);
 	}
@@ -25,6 +33,11 @@ public class SysResourceServiceImpl implements SysResourceService {
 	@Override
 	public void update(SysResource resource) {
 		baseRepository.update(resource);
+	}
+
+	@Override
+	public void delete(SysResource resource) {
+		baseRepository.delete(resource);
 	}
 
 	@Override
@@ -49,14 +62,9 @@ public class SysResourceServiceImpl implements SysResourceService {
 	}
 
 	@Override
-	public SysResource findByResourceId(Long resourceId) {
-		return baseRepository.getOneByHQL(
-				"from SysResource where resourceId = ?0", resourceId);
-	}
-
-	@Override
-	public void delete(SysResource resource) {
-		baseRepository.delete(resource);
+	public PageResults<SysResource> findListByDetachedCriteria(
+			DetachedCriteria dc, int pageNo, int pageSize) {
+		return baseRepository.findPageByDetachedCriteria(dc, pageNo, pageSize);
 	}
 
 }

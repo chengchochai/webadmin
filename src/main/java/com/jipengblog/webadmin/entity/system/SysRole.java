@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 @Entity
@@ -45,7 +46,8 @@ public class SysRole implements Serializable {
 	private Set<SysUser> users = new LinkedHashSet<SysUser>();;// 角色关联的用户
 
 	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
-	@JoinTable(name = "relation_role_module", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "module_id"))	
+	@JoinTable(name = "relation_role_module", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "module_id"))
+	@OrderBy("priority desc")//根据创建时间进行排序
 	private Set<SysModule> modules = new LinkedHashSet<SysModule>();// 角色关联的权限
 
 	public Long getRoleId() {

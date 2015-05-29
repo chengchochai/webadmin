@@ -41,6 +41,12 @@
 	                                ${pageTip}
 	                            </div>
                             </c:if>
+                            <div class="col-lg-12">
+	                        	<div id="searchDiv" class="row">
+									角色名称:<input type="text" name="roleName" size="10"/>
+									<button type="button" id="searchButton" class="btn btn-default btn-xs">搜索</button>
+                            	</div>
+                            </div>
 							<div class="dataTable_wrapper">
 								<table class="table table-striped table-bordered table-hover" id="dataTables">
 									<thead>
@@ -89,46 +95,9 @@
 	<script src="${contextPath}/static/assets/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
 	<!-- Custom Theme JavaScript -->
 	<script src="${contextPath}/static/assets/sbadmin/js/sb-admin-2.js"></script>
+	<script src="${contextPath}/static/assets/pages/dataTable.js"></script>
 	<script>
-		$(document).ready(function() {
-			$('#dataTables').DataTable({
-				"language": {
-	                 "zeroRecords": "没有找到记录",
-	                 "info": "从 _START_ 到 _END_ 条，共 _TOTAL_ 条记录",
-	                 "infoEmpty": "没有记录",
-	                 "processing" : "加载中...",
-	                 "paginate": {
-	                     "first":"首页",
-	                     "last":"末页",
-	                     "next":"下页",
-	                     "previous":"上页"
-	                 }
-	             },
-				responsive : true,
-				processing : true,
-				bSort : false,// 排序
-				bFilter : false,// 搜索
-				searching : false,// 搜索
-				bLengthChange : false,// 页面大小
-				serverSide : true,// 开启异步数据加载
-				pagingType : 'full_numbers',// 显示首页和尾页
-				sAjaxSource : '${contextPath }/system/role/fillData',
-				fnServerData : function(sSource, aDataSet, fnCallback) {
-					$.ajax({
-						"dataType" : 'json',
-						"type" : "POST",
-						"data" : {
-							start:aDataSet[3].value,
-							limit:aDataSet[4].value,
-							sEcho:aDataSet[0].value
-						},
-						"url" : sSource,
-						"success" : fnCallback
-					});
-				}
-			});
-		});
-		
+		init('${contextPath }/system/role/fillData/');
 	</script>
 </body>
 

@@ -1,12 +1,9 @@
+var json = {};
+
 function init(url) {
 	
-	var json = {};
-
 	$('#searchButton').click(function (){
-		$("#searchForm").find('input').each(function(){
-	    	json[$(this).attr("name")]=$(this).val();
-	    });
-		$('#dataTables').DataTable().draw();//重新填充数据
+		draw();
 	})
 	
 	$('#dataTables').DataTable({
@@ -35,7 +32,6 @@ function init(url) {
 			json.start=aDataSet[3].value;
 			json.limit=aDataSet[4].value;
 			json.sEcho=aDataSet[0].value;
-			alert(JSON.stringify(json));
 			$.ajax({
 				"dataType" : 'json',
 				"type" : "POST",
@@ -46,3 +42,42 @@ function init(url) {
 		}
 	});
 }
+
+/*
+ * 加载数据
+ */
+function draw(){
+	$("#searchDiv").find('input').each(function(){
+		if(this.type=="radio"){//input 类型是 radio
+			if($(this).is(':checked')){//选中
+				json[$(this).attr("name")]=$(this).val();
+			}
+		}else{//其他input
+			json[$(this).attr("name")]=$(this).val();
+		}
+    });
+	$('#dataTables').DataTable().draw();//重新填充数据
+}
+
+/*
+ * 点击事件
+ */
+$("#searchDiv").find('input').on('keypress',function(event){
+    if(event.keyCode == "13"){
+    	draw();
+    }
+});
+
+/*
+ * 日期控件
+ */
+if($('.form_datetime').html()!=undefined){
+	$('.form_datetime').datetimepicker({
+		format: 'yyyy-mm-dd hh:ii:ss',
+		language: 'zh-CN', //汉化 
+		autoclose:true //选择日期后自动关闭 
+	});
+}
+
+
+

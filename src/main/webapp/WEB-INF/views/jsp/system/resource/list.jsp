@@ -42,6 +42,12 @@
 	                                ${pageTip}
 	                            </div>
                             </c:if>
+                            <div class="col-lg-12">
+	                        	<div id="searchDiv" class="row">
+									资源名称:<input type="text" name="resourceName" size="10"/>
+									<button type="button" id="searchButton" class="btn btn-default btn-xs">搜索</button>
+                            	</div>
+                            </div>
 							<div class="dataTable_wrapper">
 								<table class="table table-striped table-bordered table-hover" id="dataTables">
 									<thead>
@@ -55,25 +61,6 @@
 											<th>操作</th>
 										</tr>
 									</thead>
-									<tbody>
-										<c:forEach var="resource" items="${resources }">
-											<tr>
-												<td>${resource.resourceId }</td>
-												<td>${resource.resourceName }</td>
-												<td>
-													<c:if test="${resource.enabled==true }">可用</c:if>
-													<c:if test="${resource.enabled==false }">禁用</c:if>
-												</td>
-												<td>${resource.priority }</td>
-												<td>${resource.resourceUri }</td>
-												<td><abbr title="${resource.description }">${resource.description }</abbr></td>
-												<td>
-													<a href="${contextPath}/system/resource/edit/${resource.resourceId}" class="btn btn-primary btn-xs">编辑</a>
-													<a onclick="if(!confirm('确定要删除吗?'))return false;" href="${contextPath}/system/resource/del/${resource.resourceId}" class="btn btn-danger btn-xs">删除</a>
-												</td>
-											</tr>
-										</c:forEach>
-									</tbody>
 								</table>
 							</div>
 							<!-- /.table-responsive -->
@@ -99,27 +86,9 @@
 	<script src="${contextPath}/static/assets/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
 	<!-- Custom Theme JavaScript -->
 	<script src="${contextPath}/static/assets/sbadmin/js/sb-admin-2.js"></script>
+	<script src="${contextPath}/static/assets/pages/dataTable.js"></script>
 	<script>
-		$(document).ready(function() {
-			$('#dataTables').DataTable({
-				"language": {
-	                 "lengthMenu": "每页 _MENU_ 条记录",
-	                 "zeroRecords": "没有找到记录",
-	                 "info": "第 _PAGE_ 页 ( 总共 _PAGES_ 页 )",
-	                 "infoEmpty": "没有记录",
-	                 "infoFiltered": "(从 _MAX_ 条记录中过滤)",
-	                 "search" : "搜索:",
-	                 "loadingRecords": "加载中...",	
-	                 "paginate": {
-	                     "first":"首页",
-	                     "last":"末页",
-	                     "next":"下页",
-	                     "previous":"下页"
-	                 }
-	             },
-				responsive : true
-			});
-		});
+		init('${contextPath }/system/resource/fillData/');
 	</script>
 </body>
 

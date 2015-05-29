@@ -2,10 +2,20 @@ package com.jipengblog.webadmin.service.system;
 
 import java.util.List;
 
+import org.hibernate.criterion.DetachedCriteria;
+
 import com.jipengblog.webadmin.entity.system.SysUser;
 import com.jipengblog.webadmin.repository.PageResults;
 
 public interface SysUserService {
+	
+	SysUser findByUserId(Long userId);
+	
+	SysUser findByLoginName(String loginName);
+
+	SysUser findByEmail(String email);
+
+	SysUser findByMobile(String mobile);
 
 	void save(SysUser user);
 
@@ -15,15 +25,10 @@ public interface SysUserService {
 
 	List<SysUser> findAll();
 
-	PageResults<SysUser> findListByPageResults(String hql, String countHql,
-			int pageNo, int pageSize);
+	PageResults<SysUser> findListByDetachedCriteria(DetachedCriteria dc,int pageNo,int pageSize);
 
-	SysUser findByLoginName(String loginName);
+	
 
-	SysUser findByEmail(String email);
-
-	SysUser findByMobile(String mobile);
-
-	SysUser findByUserId(Long userId);
+	
 
 }

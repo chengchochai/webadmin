@@ -34,18 +34,6 @@
 				<div class="col-lg-12">
 					<div class="panel panel-primary">
 						<div class="panel-heading">自定义菜单列表</div>
-						<div class="panel-body">
-                            <form role="form" id="form" action="${contextPath }/weixin/mpMenu/list" method="get">
-                            	<div class="form-group">
-                            		<c:forEach var="mpAccount" items="${mpAccounts }">
-                                    	<label class="radio-inline">
-                                        	<input type="radio" name="mpAccountId" value="${mpAccount.mpAccountId }" <c:if test="${mpAccountId==mpAccount.mpAccountId }">checked</c:if>>
-                                        	${mpAccount.mpAccountName }
-                                    	</label>
-                                    </c:forEach>
-                                </div>
-                            </form>
-                        </div>
 						<!-- /.panel-heading -->
 						<div class="panel-body">
 							<c:if test="${pageTip!=null && pageTip!=''}"><!-- 页面提示 -->
@@ -54,6 +42,20 @@
 	                                ${pageTip}
 	                            </div>
                             </c:if>
+                            <div class="col-lg-12">
+                            	<div id="searchDiv" class="row">
+									<div class="form-group">
+										微信公众号:
+	                            		<c:forEach var="mpAccount" items="${mpAccounts }">
+	                                    	<label class="radio-inline">
+	                                        	<input type="radio" name="mpAccountId" value="${mpAccount.mpAccountId }" <c:if test="${mpAccountId==mpAccount.mpAccountId }">checked</c:if>>
+	                                        	${mpAccount.mpAccountName }
+	                                    	</label>
+	                                    </c:forEach>
+	                                    <button type="button" id="searchButton" class="btn btn-default btn-xs">搜索</button>
+	                                </div>
+                            	</div>
+                            </div>
 							<div class="dataTable_wrapper">
 								<table class="table table-striped table-bordered table-hover" id="dataTables">
 									<thead>
@@ -109,11 +111,7 @@
 	<script src="${contextPath}/static/assets/sbadmin/js/sb-admin-2.js"></script>
 	<script src="${contextPath}/static/assets/pages/dataTable.js"></script>
 	<script>
-		$(document).ready(function() {
-			$(":radio").click(function(){
-				$("#form").submit();
-			});
-		});
+		init('${contextPath }/weixin/mpMenu/fillData');
 	</script>
 </body>
 

@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
@@ -65,6 +66,7 @@ public class SysModule implements Serializable {
 
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
 	@JoinTable(name = "relation_module_resource", joinColumns = @JoinColumn(name = "module_id"), inverseJoinColumns = @JoinColumn(name = "resource_id"))
+	@OrderBy("priority desc")//根据创建时间进行排序
 	private Set<SysResource> resources = new LinkedHashSet<SysResource>();// 模块关联的资源
 
 	public Long getModuleId() {

@@ -41,14 +41,6 @@
 			</div>
 		</div>
 	</div>
-	<footer class="footer ">
-      	<div class="container">
-      	<ul class="list-inline text-center">
-      	<li>粤ICP备14084387号-1</li>
-      	</ul>
-		</div>
-	</footer>
-	
 	<!-- javascript -->
   	<%@ include file="/WEB-INF/static/common/javascript.jsp"%>
   	<script src="${contextPath}/static/assets/bower_components/jqueryvalidation/dist/jquery.validate.min.js"></script>

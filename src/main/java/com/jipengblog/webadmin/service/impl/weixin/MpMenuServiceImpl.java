@@ -2,17 +2,25 @@ package com.jipengblog.webadmin.service.impl.weixin;
 
 import java.util.List;
 
+import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.jipengblog.webadmin.entity.weixin.MpMenu;
 import com.jipengblog.webadmin.repository.BaseRepository;
+import com.jipengblog.webadmin.repository.PageResults;
 import com.jipengblog.webadmin.service.weixin.MpMenuService;
 
 @Service("mpMenuService")
 @Transactional
 public class MpMenuServiceImpl implements MpMenuService {
+	
+	@Override
+	public MpMenu findByMpMenuId(Long mpMenuId) {
+		return baseRepository.getOneByHQL(
+				"from MpMenu where mpMenuId = ?0", mpMenuId);
+	}
 
 	@Autowired
 	private BaseRepository<MpMenu, Long> baseRepository;
@@ -28,12 +36,6 @@ public class MpMenuServiceImpl implements MpMenuService {
 	}
 
 	@Override
-	public MpMenu findByMpMenuId(Long mpMenuId) {
-		return baseRepository.getOneByHQL(
-				"from MpMenu where mpMenuId = ?0", mpMenuId);
-	}
-	
-	@Override
 	public List<MpMenu> findAllFirstLevelMenu(Long mpAccountId) {
 		if(mpAccountId == 0){//如果mpAccountId为0，查询所有的一级菜单
 			return baseRepository.getListByHQL("from MpMenu where parentMpMenuId = 0 ");
@@ -45,6 +47,12 @@ public class MpMenuServiceImpl implements MpMenuService {
 	@Override
 	public List<MpMenu> findAllSecondLevelMenu(Integer mpMenuId) {
 		return baseRepository.getListByHQL("from MpMenu where parentMpMenuId = ?0", mpMenuId);
+	}
+
+	@Override
+	public PageResults<MpMenu> findListByDetachedCriteria(DetachedCriteria dc,
+			int pageNo, int pageSize) {
+		return baseRepository.findPageByDetachedCriteria(dc, pageNo, pageSize);
 	}
 
 }

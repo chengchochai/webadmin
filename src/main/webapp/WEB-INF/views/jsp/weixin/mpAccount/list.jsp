@@ -42,6 +42,12 @@
 	                                ${pageTip}
 	                            </div>
                             </c:if>
+                            <div class="col-lg-12">
+                            	<div id="searchDiv" class="row">
+									appId:<input type="text" name="appId" size="10"/>
+									<button type="button" id="searchButton" class="btn btn-default btn-xs">搜索</button>
+                            	</div>
+                            </div>
 							<div class="dataTable_wrapper">
 								<table class="table table-striped table-bordered table-hover" id="dataTables">
 									<thead>
@@ -56,22 +62,6 @@
 											<th>操作</th>
 										</tr>
 									</thead>
-									<tbody>
-										<c:forEach var="mpAccount" items="${mpAccounts }">
-											<tr>
-												<td>${mpAccount.mpAccountId }</td>
-												<td>${mpAccount.mpAccountName }</td>
-												<td>${mpAccount.appId }</td>
-												<td>${mpAccount.appSecret }</td>
-												<td>${mpAccount.appToken }</td>
-												<td>${mpAccount.accessToken }</td>
-												<td>${mpAccount.accessTokenDeadTime }</td>
-												<td>
-													<a href="${contextPath}/weixin/mpAccount/edit/${mpAccount.mpAccountId}" class="btn btn-primary btn-xs">编辑</a>
-												</td>
-											</tr>
-										</c:forEach>
-									</tbody>
 								</table>
 							</div>
 							<!-- /.table-responsive -->
@@ -97,27 +87,9 @@
 	<script src="${contextPath}/static/assets/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
 	<!-- Custom Theme JavaScript -->
 	<script src="${contextPath}/static/assets/sbadmin/js/sb-admin-2.js"></script>
+	<script src="${contextPath}/static/assets/pages/dataTable.js"></script>
 	<script>
-		$(document).ready(function() {
-			$('#dataTables').DataTable({
-				"language": {
-	                 "lengthMenu": "每页 _MENU_ 条记录",
-	                 "zeroRecords": "没有找到记录",
-	                 "info": "第 _PAGE_ 页 ( 总共 _PAGES_ 页 )",
-	                 "infoEmpty": "没有记录",
-	                 "infoFiltered": "(从 _MAX_ 条记录中过滤)",
-	                 "search" : "搜索:",
-	                 "loadingRecords": "加载中...",	
-	                 "paginate": {
-	                     "first":"首页",
-	                     "last":"末页",
-	                     "next":"下页",
-	                     "previous":"下页"
-	                 }
-	             },
-				responsive : true
-			});
-		});
+		init('${contextPath }/weixin/mpAccount/fillData');
 	</script>
 </body>
 

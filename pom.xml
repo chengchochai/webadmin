@@ -115,7 +115,7 @@
 			<artifactId>c3p0</artifactId>
 			<version>0.9.1.2</version>
 		</dependency>
-
+		
 		<!-- mail -->
 		<dependency>
 			<groupId>javax.mail</groupId>

@@ -29,7 +29,7 @@
 		<div id="page-wrapper">
 			<div class="row">
 				<div class="col-lg-12">
-					<h1 class="page-header">模块管理</h1>
+					<h1 class="page-header">日志管理</h1>
 				</div>
 				<!-- /.col-lg-12 -->
 			</div>
@@ -37,28 +37,27 @@
 				<div class="col-lg-12">
 					<div class="panel panel-primary">
 						<div class="panel-heading">模块列表</div>
-						<div class="panel-body">
-							<form id="searchForm" role="form">
-								&nbsp;&nbsp;登录时间:
-								<input name="startTime" size="18" type="text" value="" class="form_datetime" readonly>到<input name="endTime" size="18" type="text" value="" class="form_datetime" readonly>
-								&nbsp;&nbsp;登录名:
-								<input name="loginName" size="12"/>
-								&nbsp;&nbsp;登录IP:
-								<input name="loginIp" size="14"/>
-								<button type="button" id="searchButton" class="btn btn-default btn-xs">搜索</button>
-							</form>
-						</div>
 						<!-- /.panel-heading -->
 						<div class="panel-body">
 							<c:if test="${pageTip!=null && pageTip!=''}">
 								<!-- 页面提示 -->
-								<div
-									class="alert <c:if test="${fn:contains(pageTip,'成功') }">alert-success</c:if><c:if test="${!fn:contains(pageTip,'成功') }">alert-danger</c:if> alert-dismissable">
+								<div class="alert <c:if test="${fn:contains(pageTip,'成功') }">alert-success</c:if><c:if test="${!fn:contains(pageTip,'成功') }">alert-danger</c:if> alert-dismissable">
 									<button type="button" class="close" data-dismiss="alert"
 										aria-hidden="true">&times;</button>
 									${pageTip}
 								</div>
 							</c:if>
+							<div class="col-lg-12">
+                            	<div id="searchDiv" class="row">
+									&nbsp;&nbsp;登录时间:
+									<input name="startTime" size="18" type="text" value="" class="form_datetime" readonly>到<input name="endTime" size="18" type="text" value="" class="form_datetime" readonly>
+									&nbsp;&nbsp;登录名:
+									<input name="loginName" size="12"/>
+									&nbsp;&nbsp;登录IP:
+									<input name="loginIp" size="14"/>
+									<button type="button" id="searchButton" class="btn btn-default btn-xs">搜索</button>
+                            	</div>
+                            </div>
 							<div class="dataTable_wrapper">
 								<table class="table table-striped table-bordered table-hover"
 									id="dataTables">
@@ -104,14 +103,7 @@
 	<script src="${contextPath}/static/assets/pages/dataTable.js"></script>
 	<script>
 		init('${contextPath }/log/login/fillData/');
-		$('.form_datetime').datetimepicker({
-			format: 'yyyy-mm-dd hh:ii:ss',
-			language: 'zh-CN', //汉化 
-			autoclose:true //选择日期后自动关闭 
-		});
-		
 	</script>
-	
 </body>
 
 </html>

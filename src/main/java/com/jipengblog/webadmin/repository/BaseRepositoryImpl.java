@@ -324,27 +324,22 @@ public class BaseRepositoryImpl<T, ID extends Serializable> implements
 		// 执行JDBC的数据批量保存
 		Work jdbcWork = new Work() {
 			public void execute(Connection connection) throws SQLException {
-
 				PreparedStatement ps = null;
 				ResultSet rs = null;
 				try {
 					ps = connection.prepareStatement(sql);
 					for (int i = 0; i < values.length; i++) {
 						setParameter(ps, i, values[i]);
-
 					}
-
 					rs = ps.executeQuery();
 					int index = 0;
 					while (rs.next()) {
 						Object obj = map.mapRow(rs, index++);
 						list.add(obj);
-
 					}
 				} finally {
 					if (rs != null) {
 						rs.close();
-
 					}
 					if (ps != null) {
 						ps.close();
@@ -388,7 +383,7 @@ public class BaseRepositoryImpl<T, ID extends Serializable> implements
 	 * @param pageNo
 	 *            下一页
 	 * @param pageSize
-	 *            一页总条数
+	 *            每一页总条数
 	 * @param values
 	 *            不定Object数组参数
 	 * @return PageResults的封装类，里面包含了页码的信息以及查询的数据List集合
@@ -417,13 +412,11 @@ public class BaseRepositoryImpl<T, ID extends Serializable> implements
 			pageResults.setTotalCount(count.intValue());
 		}
 		pageResults.resetPageNo();
-		List<T> itemList = query.setFirstResult((currentPage - 1) * pageSize)
-				.setMaxResults(pageSize).list();
+		List<T> itemList = query.setFirstResult((currentPage - 1) * pageSize).setMaxResults(pageSize).list();
 		if (itemList == null) {
 			itemList = new ArrayList<T>();
 		}
 		pageResults.setResults(itemList);
-
 		return pageResults;
 	}
 
@@ -439,7 +432,7 @@ public class BaseRepositoryImpl<T, ID extends Serializable> implements
 		pageResults.setTotalCount((int)count);
 		criteria.setProjection(null);
 		criteria.setResultTransformer(CriteriaSpecification.ROOT_ENTITY);
-		List itemList = criteria.setFirstResult(pageNo).setMaxResults(pageSize).list(); 
+		List itemList = criteria.setFirstResult((currentPage - 1) * pageSize).setMaxResults(pageSize).list(); 
 		pageResults.setResults(itemList);
 		return pageResults;
 	}
