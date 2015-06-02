@@ -33,7 +33,7 @@
 			<div class="row">
 				<div class="col-lg-12">
 					<div class="panel panel-primary">
-						<div class="panel-heading">自定义菜单列表</div>
+						<div class="panel-heading">自定义(一级)菜单</div>
 						<!-- /.panel-heading -->
 						<div class="panel-body">
 							<c:if test="${pageTip!=null && pageTip!=''}"><!-- 页面提示 -->
@@ -43,17 +43,21 @@
 	                            </div>
                             </c:if>
                             <div class="col-lg-12">
-                            	<div id="searchDiv" class="row">
-									<div class="form-group">
-										微信公众号:
-	                            		<c:forEach var="mpAccount" items="${mpAccounts }">
-	                                    	<label class="radio-inline">
-	                                        	<input type="radio" name="mpAccountId" value="${mpAccount.mpAccountId }" <c:if test="${mpAccountId==mpAccount.mpAccountId }">checked</c:if>>
-	                                        	${mpAccount.mpAccountName }
-	                                    	</label>
-	                                    </c:forEach>
-	                                    <button type="button" id="searchButton" class="btn btn-default btn-xs">搜索</button>
-	                                </div>
+                            	<div id="searchDiv" class="form-group">
+									<label>微信公众号:</label>
+									<label class="radio-inline">
+	                                    <select id="mpAccountId" name="mpAccountId" class="form-control">
+		                            		<c:forEach var="mpAccount" items="${mpAccounts }">
+		                            			<option value="${mpAccount.mpAccountId }">${mpAccount.mpAccountName }</option>
+		                                    </c:forEach>
+		                                </select>
+	                                </label>
+	                                <label class="radio-inline">
+                                    	<button type="button" id="searchButton" class="btn btn-default btn-xs">搜索</button>
+                                    </label>
+                                    <label class="radio-inline">
+                                    	<p class="help-block">请先选择微信公众号</p>
+                                    </label>
                             	</div>
                             </div>
 							<div class="dataTable_wrapper">
@@ -69,21 +73,6 @@
 											<th>操作</th>
 										</tr>
 									</thead>
-									<tbody>
-										<c:forEach var="mpMenu" items="${mpMenus }">
-											<tr>
-												<td>${mpMenu.mpMenuId }</td>
-												<td>${mpMenu.mpMenuName }</td>
-												<td>${mpMenu.mpMenuType }</td>
-												<td>${mpMenu.mpMenuKey }</td>
-												<td>${mpMenu.mpMenuUrl }</td>
-												<td>${mpMenu.mpMenuMediaId }</td>
-												<td>
-													<a href="${contextPath}/weixin/mpMenu/edit/${mpMenu.mpMenuId}" class="btn btn-primary btn-xs">编辑</a>
-												</td>
-											</tr>
-										</c:forEach>
-									</tbody>
 								</table>
 							</div>
 							<!-- /.table-responsive -->
@@ -95,13 +84,37 @@
 			</div>
 			<div class="row">
 				<div class="col-lg-2">
-					<a href="${contextPath }/weixin/mpMenu/edit/0" class="btn btn-primary">添加菜单</a>
+					<a href="#" onclick="javascript:addMenu()" class="btn btn-primary">添加一级菜单</a>
 				</div>				
 			</div>
 			<!-- /.row -->
 		</div>
 		<!-- /#page-wrapper -->
 	</div>
+
+	<!-- modal -->
+	<div id="identifier" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title">系统提示</h4>
+				</div>
+				<div class="modal-body">
+					<p>当前选择的公众号已经有3个一级菜单。根据微信公众平台规则，不能再添加新的一级菜单。</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">知道了</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
+	
 	<!-- /#wrapper -->
 	<!-- javascript -->
 	<%@ include file="/WEB-INF/static/common/javascript.jsp"%>
@@ -112,6 +125,15 @@
 	<script src="${contextPath}/static/assets/pages/dataTable.js"></script>
 	<script>
 		init('${contextPath }/weixin/mpMenu/fillData');
+		function addMenu(){
+			var menuCount = $("#dataTables").find("tbody").find("tr").length;
+			if(menuCount>=3){
+				$('#identifier').modal('show');
+				return;
+			}
+			var href= "${contextPath }/weixin/mpMenu/edit1/"+$("#mpAccountId").val()+"/0";
+			window.location.href = href;
+		}
 	</script>
 </body>
 

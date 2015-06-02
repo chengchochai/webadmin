@@ -42,7 +42,7 @@ public interface MpMenuService {
 	 * @param parentMpMenuId
 	 * @return
 	 */
-	List<MpMenu> findAllSecondLevelMenu(Integer mpMenuId);
+	List<MpMenu> findAllSecondLevelMenu(Long parentMpMenuId);
 	
 	PageResults<MpMenu> findListByDetachedCriteria(DetachedCriteria dc,int pageNo,int pageSize);
 }

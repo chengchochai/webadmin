@@ -32,8 +32,7 @@ public class SignatureUtils extends PennUtils {
 	 */
 	public SignatureUtils() {// 默认使用MD5算法
 		try {
-			messageDigest = MessageDigest.getInstance(defaulAlgorithm
-					.toString());
+			messageDigest = MessageDigest.getInstance(defaulAlgorithm.toString());
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 			logger.error("实例化时参数[" + defaulAlgorithm + "]错误");

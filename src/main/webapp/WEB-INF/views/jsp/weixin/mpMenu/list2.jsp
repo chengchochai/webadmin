@@ -1,4 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/static/common/taglibs.jsp"%>
 <!DOCTYPE html>
 <html lang="zh">
@@ -25,14 +26,14 @@
 		<div id="page-wrapper">
 			<div class="row">
 				<div class="col-lg-12">
-					<h1 class="page-header">角色管理</h1>
+					<h1 class="page-header">微信管理</h1>
 				</div>
 				<!-- /.col-lg-12 -->
 			</div>
 			<div class="row">
 				<div class="col-lg-12">
 					<div class="panel panel-primary">
-						<div class="panel-heading">角色列表</div>
+						<div class="panel-heading">自定义(二级)菜单</div>
 						<!-- /.panel-heading -->
 						<div class="panel-body">
 							<c:if test="${pageTip!=null && pageTip!=''}"><!-- 页面提示 -->
@@ -42,12 +43,23 @@
 	                            </div>
                             </c:if>
                             <div class="col-lg-12">
-	                        	<div id="searchDiv" class="form-group">
-									<label>角色名称:</label>
-									<input type="text" name="roleName" size="10"/>
-									<label class="radio-inline">
-										<button type="button" id="searchButton" class="btn btn-default btn-xs">搜索</button>
-									</label>
+                            	<div id="searchDiv" class="form-group">
+                            		<label>微信公众号:</label>
+                            		<label class="radio-inline">
+                            			${mpAccount.mpAccountName}
+                            			<input type="hidden" id="mpAccountId" name="mpAccountId" value="${mpAccount.mpAccountId }"/>
+                            		</label>
+                            		<label>自定义(一级)菜单:</label>
+                            		<label class="radio-inline">
+	                            		<select id="parentMpMenuId" name="parentMpMenuId" class="form-control">
+		                            		<c:forEach var="parentMpMenu" items="${parentMpMenus }">
+		                            			<option value="${parentMpMenu.mpMenuId }">${parentMpMenu.mpMenuName }</option>
+		                                    </c:forEach>
+		                                </select>
+	                                </label>
+	                                <label class="radio-inline">
+                                    	<button type="button" id="searchButton" class="btn btn-default btn-xs">搜索</button>
+                                    </label>
                             	</div>
                             </div>
 							<div class="dataTable_wrapper">
@@ -56,23 +68,13 @@
 										<tr>
 											<th>#</th>
 											<th>名称</th>
-											<th>描述</th>
+											<th>类型</th>
+											<th>Key</th>
+											<th>Url</th>
+											<th>MediaId</th>
 											<th>操作</th>
 										</tr>
 									</thead>
-									<tbody>
-										<c:forEach var="role" items="${roles }">
-											<tr>
-												<td>${role.roleId }</td>
-												<td>${role.roleName }</td>
-												<td><abbr title="${role.description }">${role.description }</abbr></td>
-												<td>
-													<a href="${contextPath}/system/role/edit/${role.roleId}" class="btn btn-primary btn-xs">编辑</a>
-													<a onclick="if(!confirm('确定要删除吗?'))return false;" href="${contextPath}/system/role/del/${role.roleId}" class="btn btn-danger btn-xs">删除</a>
-												</td>
-											</tr>
-										</c:forEach>
-									</tbody>
 								</table>
 							</div>
 							<!-- /.table-responsive -->
@@ -84,7 +86,7 @@
 			</div>
 			<div class="row">
 				<div class="col-lg-2">
-					<a href="${contextPath }/system/role/edit/0" class="btn btn-primary">添加角色</a>
+					<a href="#" onclick="javascript:addMenu()" class="btn btn-primary">添加二级菜单</a>
 				</div>				
 			</div>
 			<!-- /.row -->
@@ -100,7 +102,11 @@
 	<script src="${contextPath}/static/assets/sbadmin/js/sb-admin-2.js"></script>
 	<script src="${contextPath}/static/assets/pages/dataTable.js"></script>
 	<script>
-		init('${contextPath }/system/role/fillData/');
+		init('${contextPath }/weixin/mpMenu/fillData');
+		function addMenu(){
+			var href= "${contextPath }/weixin/mpMenu/edit2/"+$("#mpAccountId").val()+"/"+$("#parentMpMenuId").val()+"/0";
+			window.location.href = href;
+		}
 	</script>
 </body>
 

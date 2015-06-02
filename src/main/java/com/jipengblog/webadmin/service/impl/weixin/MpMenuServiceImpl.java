@@ -45,8 +45,8 @@ public class MpMenuServiceImpl implements MpMenuService {
 	}
 
 	@Override
-	public List<MpMenu> findAllSecondLevelMenu(Integer mpMenuId) {
-		return baseRepository.getListByHQL("from MpMenu where parentMpMenuId = ?0", mpMenuId);
+	public List<MpMenu> findAllSecondLevelMenu(Long parentMpMenuId) {
+		return baseRepository.getListByHQL("from MpMenu where parentMpMenuId = ?0", parentMpMenuId);
 	}
 
 	@Override

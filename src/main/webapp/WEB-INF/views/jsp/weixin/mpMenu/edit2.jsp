@@ -1,3 +1,4 @@
+<%@page import="com.jipengblog.webadmin.entity.constant.MpMenuType"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/static/common/taglibs.jsp"%>
 <!DOCTYPE html>
@@ -36,36 +37,48 @@
                         <div class="panel-body">
                             <div class="row">
                             	<div class="col-lg-8">
-                            		<form role="form" id="form" action="${contextPath }/weixin/mpAccount/edit" method="post">
-	                            		<input type="hidden" name="mpMenu" value="${mpMenu.mpMenuId }"/>
+                            		<form role="form" id="form" action="${contextPath }/weixin/mpMenu/edit" method="post">
+	                            		<input type="hidden" name="mpAccountId" value="${mpAccount.mpAccountId }"/>
+	                            		<input type="hidden" name="parentMpMenuId" value="${parentMpMenu.mpMenuId }"/>
+	                            		<input type="hidden" name="mpMenuId" value="${mpMenu.mpMenuId }"/>
+                            			<div class="form-group">
+                                        	<label><span class="required"> * </span>菜单级别:</label>
+                                        	二级菜单(${mpAccount.mpAccountName } -> ${parentMpMenu.mpMenuName })	
+                                        </div>
                             			<div class="form-group">
                                             <label><span class="required"> * </span>菜单名称:</label>
                                            	<input class="form-control" name="mpMenuName" value="${mpMenu.mpMenuName}"/>
+                                           	<p class="help-block">二级菜单最多7个汉字，多出来的部分将会以“...”代替。</p>
                                         </div>
                                         <div class="form-group">
-                                            <label><span class="required"> * </span>菜单类型:</label>
-                                            
-                                           	<input class="form-control"  name="appId" value="${mpAccount.appId}" <c:if test="${mpAccount!=null }">disabled</c:if>/>
+                                            <label><span class="required"> * </span>显示级别:</label>
+                                            <select name="priority" class="form-control">
+                                            	<c:forEach var="i" begin="0" end="4" >
+                                            		<option value="${i}" <c:if test="${mpMenu.priority==i}">selected</c:if> >${i}</option>
+                                            	</c:forEach>
+                                            </select>
+                                            <p class="help-block">说明:级别由高到低分别对应由左到右(一级菜单)或由上到下(二级菜单)</p>
                                         </div>
                                         <div class="form-group">
-                                            <label><span class="required"> * </span>appSecret:</label>
-                                           	<input class="form-control" name="appSecret" value="${mpAccount.appSecret}"/>
+                                        	<label><span class="required"> * </span>菜单类型:</label>
+                                            <c:set var="enumValues" value="<%=MpMenuType.values()%>"/>
+                                            <select name="mpMenuType" class="form-control">
+	                                            <c:forEach var="enumValue" items="${enumValues }">
+	                                            	<option value="${enumValue }" <c:if test="${enumValue == mpMenu.mpMenuType }">selected</c:if> >${enumValue.value }</option>
+	                                            </c:forEach>
+                                            </select>
                                         </div>
                                         <div class="form-group">
-                                            <label><span class="required"> * </span>appToken:</label>
-                                           	<input class="form-control" name="appToken" value="${mpAccount.appToken}"/>
+                                            <label>URL:</label>
+                                           	<input class="form-control" name="mpMenuUrl" value="${mpMenu.mpMenuUrl}"/>
                                         </div>
                                         <div class="form-group">
-                                            <label><span class="required"></span>encodingAESKey:</label>
-                                           	<input class="form-control" name="encodingAESKey" value="${mpAccount.encodingAESKey}"/>
+                                            <label>KEY:</label>
+                                           	<input class="form-control" name="mpMenuKey" value="${mpMenu.mpMenuKey}"/>
                                         </div>
                                         <div class="form-group">
-                                            <label><span class="required"></span>accessToken:</label>
-                                           	<input class="form-control" name="accessToken" value="${mpAccount.accessToken}" disabled/>
-                                        </div>
-                                        <div class="form-group">
-                                            <label><span class="required"></span>accessToken截至日期:</label>
-                                           	<input class="form-control" name="accessTokenDeadTime" value="${mpAccount.accessTokenDeadTime}" disabled/>
+                                            <label>MediaId:</label>
+                                           	<input class="form-control" name="mpMenuMediaId" value="${mpMenu.mpMenuMediaId}"/>
                                         </div>
                                         <button type="submit" class="btn btn-primary">保存</button>
                                         <button type="button" onclick="window.history.go(-1);" class="btn btn-default">返回</button>
@@ -86,7 +99,7 @@
   	<script src="${contextPath}/static/assets/bower_components/jqueryvalidation/dist/jquery.validate.min.js"></script>
   	<!-- Custom Theme JavaScript -->
 	<script src="${contextPath}/static/assets/sbadmin/js/sb-admin-2.js"></script>
-	<script src="${contextPath}/static/assets/pages/weixin/mpAccount/FormValid.js" type="text/javascript"></script>
+	<script src="${contextPath}/static/assets/pages/weixin/mpMenu/FormValid.js" type="text/javascript"></script>
 	<script type="text/javascript">
   	jQuery(document).ready(function() { 
   		FormValid.init();

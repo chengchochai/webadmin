@@ -24,10 +24,10 @@
 						<form id="login-form" action="${contextPath}/login" method="post">
 							<fieldset>
 								<div class="form-group">
-									<input type="text" class="form-control" placeholder="请输入账号" name="loginname" >
+									<input type="text" class="form-control" placeholder="请输入账号" name="loginname" value="jipeng">
 								</div>
 								<div class="form-group">
-									<input type="password" class="form-control" placeholder="请输入密码" name="password">
+									<input type="password" class="form-control" placeholder="请输入密码" name="password" value="123123">
 								</div>
 								<div class="checkbox">
 									<label> <input name="remember" type="checkbox" value="1">记住我</label>

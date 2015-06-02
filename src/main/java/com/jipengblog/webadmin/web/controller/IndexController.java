@@ -36,10 +36,8 @@ public class IndexController extends ParentController {
 
 	@RequestMapping("/index")
 	public String index(
-			Model model,
-			HttpSession session,
-			HttpServletRequest request,
-			HttpServletResponse response,
+			Model model, HttpSession session,
+			HttpServletRequest request, HttpServletResponse response,
 			@CookieValue(value = CookieCons.LOGINNAME, defaultValue = "") String loginName,// 登录名称
 			@CookieValue(value = CookieCons.LOGINSIGN, defaultValue = "") String loginSign) {// 防止cookie被篡改
 

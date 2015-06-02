@@ -43,9 +43,12 @@
 	                            </div>
                             </c:if>
                             <div class="col-lg-12">
-	                        	<div id="searchDiv" class="row">
-									资源名称:<input type="text" name="resourceName" size="10"/>
-									<button type="button" id="searchButton" class="btn btn-default btn-xs">搜索</button>
+	                        	<div id="searchDiv" class="form-group">
+									<label>资源名称:</label>
+									<input type="text" name="resourceName" size="10"/>
+									<label class="radio-inline">
+										<button type="button" id="searchButton" class="btn btn-default btn-xs">搜索</button>
+									</label>
                             	</div>
                             </div>
 							<div class="dataTable_wrapper">

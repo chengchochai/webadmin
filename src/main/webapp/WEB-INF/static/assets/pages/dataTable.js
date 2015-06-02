@@ -47,7 +47,7 @@ function init(url) {
  * 加载数据
  */
 function draw(){
-	$("#searchDiv").find('input').each(function(){
+	$("#searchDiv").find('input, select').each(function(){
 		if(this.type=="radio"){//input 类型是 radio
 			if($(this).is(':checked')){//选中
 				json[$(this).attr("name")]=$(this).val();

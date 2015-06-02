@@ -21,14 +21,15 @@ public class MpMenu implements Serializable {
 	}
 
 	public MpMenu(String mpMenuName, MpMenuType mpMenuType, String mpMenuKey,
-			String mpMenuUrl, String mpMenuMediaId, Long mpAccountId,
-			Integer parentMpMenuId) {
+			String mpMenuUrl, String mpMenuMediaId, Long mpAccountId, Integer priority,
+			Long parentMpMenuId) {
 		this.mpMenuName = mpMenuName;
 		this.mpMenuType = mpMenuType;
 		this.mpMenuKey = mpMenuKey;
 		this.mpMenuUrl = mpMenuUrl;
 		this.mpMenuMediaId = mpMenuMediaId;
 		this.mpAccountId = mpAccountId;
+		this.priority = priority;
 		this.parentMpMenuId = parentMpMenuId;
 	}
 
@@ -55,9 +56,12 @@ public class MpMenu implements Serializable {
 
 	@Column(nullable = true, length = 50)
 	private String mpMenuMediaId;// 调用新增永久素材接口返回的合法media_id
+	
+	@Column(nullable = true, columnDefinition = "INT default 0")
+	private Integer priority;//微信自定义菜单显示顺序
 
 	@Column(nullable = false, columnDefinition = "INT default 0")
-	private Integer parentMpMenuId;// 如果是0表示一级按钮，否则为二级按钮
+	private Long parentMpMenuId;// 如果是0表示一级按钮，否则为二级按钮
 
 	@Column(nullable = false)
 	private Long mpAccountId;
@@ -110,12 +114,20 @@ public class MpMenu implements Serializable {
 		this.mpMenuMediaId = mpMenuMediaId;
 	}
 
-	public Integer getParentMpMenuId() {
+	public Long getParentMpMenuId() {
 		return parentMpMenuId;
 	}
 
-	public void setParentMpMenuId(Integer parentMpMenuId) {
+	public void setParentMpMenuId(Long parentMpMenuId) {
 		this.parentMpMenuId = parentMpMenuId;
+	}
+	
+	public Integer getPriority() {
+		return priority;
+	}
+
+	public void setPriority(Integer priority) {
+		this.priority = priority;
 	}
 
 	public Long getMpAccountId() {

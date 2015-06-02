@@ -2,8 +2,6 @@ package com.jipengblog.webadmin.web.controller.weixin;
 
 import java.util.List;
 
-import javax.servlet.http.HttpSession;
-
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -44,7 +42,7 @@ public class MpAccountController extends ParentController {
 	 * @return
 	 */
 	@RequestMapping(value = "/weixin/mpAccount/list", method = { RequestMethod.GET })
-	public String list(HttpSession session, Model model, String tip) {
+	public String list(Model model, String tip) {
 		try {
 			if (tip != null) {
 				super.pageTip = new String(tip.trim().getBytes("ISO-8859-1"),

@@ -11,6 +11,10 @@ import org.apache.commons.lang.StringUtils;
  * 
  */
 public class SortUtil {
+	
+	private SortUtil(){
+		throw new Error("工具类，不需要实例化，直接使用静态方法");
+	}
 
 	/**
 	 * 字典排序

@@ -9,6 +9,10 @@ import java.util.Date;
 import com.jipengblog.webadmin.utils.time.constant.TimeUnit;
 
 public class DateUtils {
+	
+	private DateUtils(){
+		throw new Error("工具类，不需要实例化，直接使用静态方法");
+	}
 
 	/**
 	 * 以基准时间为标准计算加入偏移量后的时间

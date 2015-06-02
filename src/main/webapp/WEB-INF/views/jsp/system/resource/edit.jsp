@@ -53,16 +53,9 @@
                                         <div class="form-group">
                                             <label><span class="required"> * </span>显示级别:</label>
                                             <select name="priority" class="form-control">
-                                                <option value="0" <c:if test="${resource.priority==0 }">selected</c:if> >0</option>
-                                                <option value="1" <c:if test="${resource.priority==1 }">selected</c:if> >1</option>
-                                                <option value="2" <c:if test="${resource.priority==2 }">selected</c:if> >2</option>
-                                                <option value="3" <c:if test="${resource.priority==3 }">selected</c:if> >3</option>
-                                                <option value="4" <c:if test="${resource.priority==4 }">selected</c:if> >4</option>
-                                                <option value="5" <c:if test="${resource.priority==5 }">selected</c:if> >5</option>
-                                                <option value="6" <c:if test="${resource.priority==6 }">selected</c:if> >6</option>
-                                                <option value="7" <c:if test="${resource.priority==7 }">selected</c:if> >7</option>
-                                                <option value="8" <c:if test="${resource.priority==8 }">selected</c:if> >8</option>
-                                                <option value="9" <c:if test="${resource.priority==9 }">selected</c:if> >9</option>
+                                            	<c:forEach var="i" begin="0" end="9" >
+                                            		<option value="${i}" <c:if test="${resource.priority==i}">selected</c:if> >${i}</option>
+                                            	</c:forEach>
                                             </select>
                                         </div>
                                         <div class="form-group">

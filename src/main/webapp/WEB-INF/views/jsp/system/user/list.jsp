@@ -44,12 +44,18 @@
 	                            </div>
                             </c:if>
                             <div class="col-lg-12">
-                            	<div id="searchDiv" class="row">
-									创建时间:<input name="startTime" size="18" type="text" class="form_datetime" readonly>
-										到<input name="endTime" size="18" type="text" class="form_datetime" readonly>
-									&nbsp;&nbsp;登录名:<input type="text" name="loginName" size="10"/>
-									&nbsp;&nbsp;手机:<input  type="text" name="mobile" size="12"/>
-									<button type="button" id="searchButton" class="btn btn-default btn-xs">搜索</button>
+                            	<div id="searchDiv" class="form-group">
+									<label>创建时间:</label>
+									<input name="startTime" size="18" type="text" class="form_datetime" readonly>
+									到
+									<input name="endTime" size="18" type="text" class="form_datetime" readonly>
+									<label>登录名:</label>
+									<input type="text" name="loginName" size="10"/>
+									<label>手机:</label>
+									<input  type="text" name="mobile" size="12"/>
+									<label class="radio-inline">
+										<button type="button" id="searchButton" class="btn btn-default btn-xs">搜索</button>
+									</label>
                             	</div>
                             </div>
 							<div class="dataTable_wrapper">
