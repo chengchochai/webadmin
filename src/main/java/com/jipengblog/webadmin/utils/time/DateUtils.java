@@ -98,6 +98,9 @@ public class DateUtils {
 	 * @return
 	 */
 	public static String dateToString(Date date) {
+		if (date == null) {
+			return "";
+		}
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		return df.format(date);
 	}

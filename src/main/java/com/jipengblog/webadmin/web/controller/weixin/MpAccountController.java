@@ -22,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 import com.jipengblog.webadmin.entity.weixin.MpAccount;
 import com.jipengblog.webadmin.repository.PageResults;
 import com.jipengblog.webadmin.service.weixin.MpAccountService;
+import com.jipengblog.webadmin.utils.time.DateUtils;
 import com.jipengblog.webadmin.web.common.DataTablesPojo;
 import com.jipengblog.webadmin.web.controller.ParentController;
 
@@ -176,8 +177,9 @@ public class MpAccountController extends ParentController {
 			jsonObj.add(mpAccount.getAppId());
 			jsonObj.add(mpAccount.getAppSecret());
 			jsonObj.add(mpAccount.getAppToken());
-			jsonObj.add(mpAccount.getAccessToken());
-			jsonObj.add(mpAccount.getAccessTokenDeadTime());
+			String accessToken = "<abbr title=\""+mpAccount.getAccessToken()+"\">"+mpAccount.getAccessTokenShort()+"</abbr>";
+			jsonObj.add(accessToken);
+			jsonObj.add(DateUtils.dateToString(mpAccount.getAccessTokenDeadTime()));
 			String operator = "<a href=\"edit/"+mpAccount.getMpAccountId()+"\" class=\"btn btn-primary btn-xs\">编辑</a>";
 			jsonObj.add(operator);
 			jsonArr.add(jsonObj);

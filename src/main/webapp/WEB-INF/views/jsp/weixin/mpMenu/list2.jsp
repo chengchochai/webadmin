@@ -85,14 +85,39 @@
 				<!-- /.col-lg-12 -->
 			</div>
 			<div class="row">
-				<div class="col-lg-2">
-					<a href="#" onclick="javascript:addMenu()" class="btn btn-primary">添加二级菜单</a>
+				<div class="col-lg-4">
+					<a href="#" id="addBtn" onclick="javascript:addMenu()" class="btn btn-primary disabled">添加二级菜单</a> 
+					<a href="#" id="addBtn" onclick="javascript:back();" class="btn btn-default">返回</a>
 				</div>				
 			</div>
 			<!-- /.row -->
 		</div>
 		<!-- /#page-wrapper -->
 	</div>
+	
+	<!-- modal -->
+	<div id="identifier" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title">系统提示</h4>
+				</div>
+				<div class="modal-body">
+					<p>当前选择的公众号已经有5个二级菜单。根据微信公众平台规则，不能再添加新的二级菜单。</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">知道了</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
+	
 	<!-- /#wrapper -->
 	<!-- javascript -->
 	<%@ include file="/WEB-INF/static/common/javascript.jsp"%>
@@ -104,7 +129,17 @@
 	<script>
 		init('${contextPath }/weixin/mpMenu/fillData');
 		function addMenu(){
+			var menuCount = $("#dataTables").find("tbody").find("tr").length;
+			if(menuCount>=5){
+				$('#identifier').modal('show');
+				return;
+			}
 			var href= "${contextPath }/weixin/mpMenu/edit2/"+$("#mpAccountId").val()+"/"+$("#parentMpMenuId").val()+"/0";
+			window.location.href = href;
+		}
+		
+		function back(){
+			var href= "${contextPath }/weixin/mpMenu/list1";
 			window.location.href = href;
 		}
 	</script>

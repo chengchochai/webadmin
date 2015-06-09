@@ -55,8 +55,8 @@
 	                                <label class="radio-inline">
                                     	<button type="button" id="searchButton" class="btn btn-default btn-xs">搜索</button>
                                     </label>
-                                    <label class="radio-inline">
-                                    	<p class="help-block">请先选择微信公众号</p>
+                                     <label class="radio-inline">
+                                    	<button type="button" class="btn btn-danger btn-sm" onclick="javascript:releaseMenu()">发布自定义菜单</button>
                                     </label>
                             	</div>
                             </div>
@@ -83,8 +83,8 @@
 				<!-- /.col-lg-12 -->
 			</div>
 			<div class="row">
-				<div class="col-lg-2">
-					<a href="#" onclick="javascript:addMenu()" class="btn btn-primary">添加一级菜单</a>
+				<div class="col-lg-4">
+					<a href="#" id="addBtn" onclick="javascript:addMenu()" class="btn btn-primary disabled">添加一级菜单</a>
 				</div>				
 			</div>
 			<!-- /.row -->
@@ -115,6 +115,30 @@
 	</div>
 	<!-- /.modal -->
 	
+	<!-- modal -->
+	<div id="releaseDiv" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title">系统提示</h4>
+				</div>
+				<div class="modal-body">
+					<p>改操作将更改微信公众号中的自定义菜单，请确认！</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" onclick="javascript:releaseConfirm();">确认发布</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消发布</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
+	
 	<!-- /#wrapper -->
 	<!-- javascript -->
 	<%@ include file="/WEB-INF/static/common/javascript.jsp"%>
@@ -126,13 +150,32 @@
 	<script>
 		init('${contextPath }/weixin/mpMenu/fillData');
 		function addMenu(){
-			var menuCount = $("#dataTables").find("tbody").find("tr").length;
+			var menuCount = $('#dataTables').find('tbody').find('tr').length;
 			if(menuCount>=3){
 				$('#identifier').modal('show');
 				return;
 			}
-			var href= "${contextPath }/weixin/mpMenu/edit1/"+$("#mpAccountId").val()+"/0";
+			var href= '${contextPath }/weixin/mpMenu/edit1/'+$('#mpAccountId').val()+'/0';
 			window.location.href = href;
+		}
+		
+		function releaseMenu(){
+			$('#releaseDiv').modal('show');
+		}
+		
+		function releaseConfirm() {
+			$.ajax({
+				url : '${contextPath }/weixin/mpMenu/releaseMenu/'+$('#mpAccountId').val(),
+				async : true,
+				dataType : 'json',
+				type : 'PUT',
+				success : function(data, textStatus) {
+					console.log('success');
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					console.log('error');
+				},
+			});
 		}
 	</script>
 </body>

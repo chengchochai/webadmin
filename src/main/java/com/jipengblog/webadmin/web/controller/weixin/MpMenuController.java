@@ -1,6 +1,10 @@
 package com.jipengblog.webadmin.web.controller.weixin;
 
+import java.util.Date;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -24,8 +28,12 @@ import com.jipengblog.webadmin.entity.weixin.MpMenu;
 import com.jipengblog.webadmin.repository.PageResults;
 import com.jipengblog.webadmin.service.weixin.MpAccountService;
 import com.jipengblog.webadmin.service.weixin.MpMenuService;
+import com.jipengblog.webadmin.utils.http.HttpUtils;
+import com.jipengblog.webadmin.utils.time.DateUtils;
+import com.jipengblog.webadmin.utils.time.constant.TimeUnit;
 import com.jipengblog.webadmin.web.common.DataTablesPojo;
 import com.jipengblog.webadmin.web.controller.ParentController;
+import com.jipengblog.webadmin.weixin.config.IntAddress;
 
 @Controller
 public class MpMenuController extends ParentController {
@@ -82,8 +90,10 @@ public class MpMenuController extends ParentController {
 			} else {
 				super.pageTip = null;
 			}
-			MpAccount mpAccount = mpAccountService.findByMpAccountId(mpAccountId);
-			List<MpMenu> parentMpMenus = mpMenuService.findAllFirstLevelMenu(mpAccountId);
+			MpAccount mpAccount = mpAccountService
+					.findByMpAccountId(mpAccountId);
+			List<MpMenu> parentMpMenus = mpMenuService
+					.findAllFirstLevelMenu(mpAccountId);
 			MpMenu parentMpMenu = mpMenuService.findByMpMenuId(parentMpMenuId);
 			model.addAttribute("mpAccount", mpAccount);
 			model.addAttribute("parentMpMenu", parentMpMenu);
@@ -115,7 +125,8 @@ public class MpMenuController extends ParentController {
 		}
 		model.addAttribute("mpAccount", mpAccount);
 		if (mpMenuId == 0) {// 新增时判断自定义(一级)菜单的数量
-			List<MpMenu> list = mpMenuService.findAllFirstLevelMenu(mpAccountId);
+			List<MpMenu> list = mpMenuService
+					.findAllFirstLevelMenu(mpAccountId);
 			// 判断当前公众号如果已经有了3个自定义(一级)菜单，则无法添加第4个自定义(一级)菜单
 			if (list.size() >= 3) {
 				modelMap.addAttribute("tip", "不能添加第四个自定义(一级)菜单");
@@ -149,36 +160,42 @@ public class MpMenuController extends ParentController {
 	 */
 	@RequestMapping(value = "/weixin/mpMenu/edit2/{mpAccountId}/{parentMpMenuId}/{mpMenuId}", method = { RequestMethod.GET })
 	public String edit2(Model model, RedirectAttributesModelMap modelMap,
-			@PathVariable("mpAccountId") Long mpAccountId,//表示当前操作的公众号
-			@PathVariable("parentMpMenuId") Long parentMpMenuId,//表示当前操作的自定义(一级)菜单 
-			@PathVariable("mpMenuId") Long mpMenuId) {//表示当前操作的菜单，如果为0，则表示当前操作自定义(一级)菜单
+			@PathVariable("mpAccountId") Long mpAccountId,// 表示当前操作的公众号
+			@PathVariable("parentMpMenuId") Long parentMpMenuId,// 表示当前操作的自定义(一级)菜单
+			@PathVariable("mpMenuId") Long mpMenuId) {// 表示当前操作的菜单，如果为0，则表示当前操作自定义(一级)菜单
 		MpAccount mpAccount = mpAccountService.findByMpAccountId(mpAccountId);
 		if (mpAccount == null) {// 首先判断公众号信息是否正确存在
 			modelMap.addAttribute("tip", "公众号信息错误");
-			return redirect + defaultPath2;
+			return redirect + defaultPath2 + "/" + mpAccountId + "/"
+					+ parentMpMenuId;
 		}
-		
+		model.addAttribute("mpAccount", mpAccount);
+
 		MpMenu parentMpMenu = mpMenuService.findByMpMenuId(parentMpMenuId);
 		if (parentMpMenu == null) {// 判断对应的自定义(一级)菜单信息是否正确存在
 			modelMap.addAttribute("tip", "自定义(一级)菜单信息错误");
-			return redirect + defaultPath2;
+			return redirect + defaultPath2 + "/" + mpAccountId + "/"
+					+ parentMpMenuId;
 		}
 		model.addAttribute("parentMpMenu", parentMpMenu);
-		
-		if (parentMpMenu.getMpAccountId() != mpAccountId){//判断公众号和自定义(一级)菜单的关系是否正确
+
+		if (parentMpMenu.getMpAccountId() != mpAccountId) {// 判断公众号和自定义(一级)菜单的关系是否正确
 			modelMap.addAttribute("tip", "公众号与自定义(一级)菜单关系错误");
-			return redirect + defaultPath2;
+			return redirect + defaultPath2 + "/" + mpAccountId + "/"
+					+ parentMpMenuId;
 		}
-		
+
 		if (mpMenuId == 0) {// 新增时判断自定义(二级)菜单的数量
-			List<MpMenu> list = mpMenuService.findAllSecondLevelMenu(parentMpMenuId);
+			List<MpMenu> list = mpMenuService
+					.findAllSecondLevelMenu(parentMpMenuId);
 			// 判断当前公众号如果已经有了5个自定义(二级)菜单，则无法添加第6个自定义(二级)菜单
 			if (list.size() >= 5) {
 				modelMap.addAttribute("tip", "不能添加第六个自定义(二级)菜单");
-				return redirect + defaultPath2;
+				return redirect + defaultPath2 + "/" + mpAccountId + "/"
+						+ parentMpMenuId;
 			}
 		}
-		
+
 		if (mpMenuId != 0) {// 编辑时判断自定义(二级)菜单与公众号的关系是否正确
 			MpMenu mpMenu = mpMenuService.findByMpMenuId(mpMenuId);
 			if (mpMenu == null) {// 先判断自定义(二级)菜单的信息是否正确
@@ -197,7 +214,8 @@ public class MpMenuController extends ParentController {
 
 	@RequestMapping(value = "/weixin/mpMenu/edit", method = { RequestMethod.POST })
 	public String edit(
-			Model model, RedirectAttributesModelMap modelMap,
+			Model model,
+			RedirectAttributesModelMap modelMap,
 			@RequestParam(value = "mpMenuId") Long mpMenuId,
 			@RequestParam(value = "parentMpMenuId", required = false, defaultValue = "0") Long parentMpMenuId,
 			@RequestParam(value = "mpAccountId", required = false) Long mpAccountId,
@@ -208,28 +226,31 @@ public class MpMenuController extends ParentController {
 			@RequestParam(value = "mpMenuKey") String mpMenuKey,
 			@RequestParam(value = "mpMenuMediaId") String mpMenuMediaId) {
 		String tip = null;
-		String finalPath = redirect + defaultPath1;//最后跳转的地址
-		if (parentMpMenuId != 0){
-			finalPath = redirect + defaultPath2;
+		String finalPath = redirect + defaultPath1;// 最后跳转的地址
+		if (parentMpMenuId != 0) {
+			finalPath = redirect + defaultPath2 + "/" + mpAccountId + "/"
+					+ parentMpMenuId;
 		}
 		try {
-			MpAccount mpAccount = mpAccountService.findByMpAccountId(mpAccountId);
+			MpAccount mpAccount = mpAccountService
+					.findByMpAccountId(mpAccountId);
 			if (mpAccount == null) {// 首先判断公众号信息是否正确存在
 				modelMap.addAttribute("tip", "公众号信息错误");
 				return finalPath;
 			}
-			
-			if (parentMpMenuId != 0){
-				MpMenu parentMpMenu = mpMenuService.findByMpMenuId(parentMpMenuId);
-				if (parentMpMenu == null){
+
+			if (parentMpMenuId != 0) {
+				MpMenu parentMpMenu = mpMenuService
+						.findByMpMenuId(parentMpMenuId);
+				if (parentMpMenu == null) {
 					modelMap.addAttribute("tip", "自定义(一级)菜单信息错误");
 					return finalPath;
 				}
-				
-				if (parentMpMenu.getMpAccountId() != mpAccountId){
+
+				if (parentMpMenu.getMpAccountId() != mpAccountId) {
 					modelMap.addAttribute("tip", "公众号与自定义(一级)菜单关系错误");
 					return finalPath;
-							
+
 				}
 			}
 			MpMenu mpMenu = mpMenuService.findByMpMenuId(mpMenuId);
@@ -248,9 +269,10 @@ public class MpMenuController extends ParentController {
 				mpMenuService.update(mpMenu);
 				tip = "自定义菜单编辑成功";
 			} else {
-				mpMenu = new MpMenu(mpMenuName,
-						MpMenuType.valueOf(mpMenuType), mpMenuKey, mpMenuUrl,
-						mpMenuMediaId, mpAccountId, priority, parentMpMenuId);
+
+				mpMenu = new MpMenu(mpMenuName, MpMenuType.valueOf(mpMenuType),
+						mpMenuKey, mpMenuUrl, mpMenuMediaId, mpAccountId,
+						priority, parentMpMenuId);
 				mpMenuService.save(mpMenu);
 				tip = "自定义菜单添加成功";
 			}
@@ -266,6 +288,7 @@ public class MpMenuController extends ParentController {
 	@RequestMapping(value = "/weixin/mpMenu/fillData", method = { RequestMethod.POST }, produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String tableData(
+			HttpServletRequest request,
 			@RequestParam(value = "mpAccountId", required = false) Long mpAccountId,
 			@RequestParam(value = "parentMpMenuId", required = false, defaultValue = "0") Long parentMpMenuId,
 			@RequestParam(value = "sEcho", required = true) Integer sEcho,
@@ -275,7 +298,9 @@ public class MpMenuController extends ParentController {
 		if (null != mpAccountId && !"".equals(mpAccountId)) {
 			dc.add(Restrictions.eq("mpAccountId", mpAccountId));
 		} else {// 如果不传mpAccountId，则不查询
-			return JSONObject.fromObject(new DataTablesPojo(sEcho, 0, 0, new JSONArray())).toString();
+			return JSONObject.fromObject(
+					new DataTablesPojo(sEcho, 0, 0, new JSONArray()))
+					.toString();
 		}
 		if (null != parentMpMenuId && !"".equals(parentMpMenuId)) {// 查询自定义(二级)菜单
 			dc.add(Restrictions.eq("parentMpMenuId", parentMpMenuId));
@@ -283,7 +308,8 @@ public class MpMenuController extends ParentController {
 			dc.add(Restrictions.eq("parentMpMenuId", 0L));
 		}
 		dc.addOrder(Order.desc("priority"));// 排序
-		PageResults<MpMenu> pageResults = mpMenuService.findListByDetachedCriteria(dc, (start / limit) + 1, limit);
+		PageResults<MpMenu> pageResults = mpMenuService
+				.findListByDetachedCriteria(dc, (start / limit) + 1, limit);
 		List<MpMenu> results = pageResults.getResults();
 		JSONArray jsonArr = new JSONArray();
 		for (MpMenu mpMenu : results) {
@@ -294,14 +320,47 @@ public class MpMenuController extends ParentController {
 			jsonObj.add(mpMenu.getMpMenuKey());
 			jsonObj.add(mpMenu.getMpMenuUrl());
 			jsonObj.add(mpMenu.getMpMenuMediaId());
-			String operator = "<a href=\"edit1/" + mpAccountId + "/" + mpMenu.getMpMenuId() + "\" class=\"btn btn-primary btn-xs\">编辑</a>";
-			if(parentMpMenuId == 0){//自定义(一级)菜单时添加查看二级菜单的按钮
-				operator += "<a href=\"list2/" + mpAccountId + "/" + mpMenu.getMpMenuId() + "\" class=\"btn btn-primary btn-xs\">查看自定义(二级)菜单</a>";
+			String operator = "<a href=\"edit1/" + mpAccountId + "/"
+					+ mpMenu.getMpMenuId()
+					+ "\" class=\"btn btn-primary btn-xs\">编辑</a> ";
+			if (parentMpMenuId == 0) {// 自定义(一级)菜单时添加查看二级菜单的按钮
+				operator += "<a href=\"list2/" + mpAccountId + "/"
+						+ mpMenu.getMpMenuId()
+						+ "\" class=\"btn btn-primary btn-xs\">查看二级菜单</a> ";
 			}
 			jsonObj.add(operator);
 			jsonArr.add(jsonObj);
 		}
-		DataTablesPojo dataTablesPojo = new DataTablesPojo(sEcho, pageResults.getTotalCount(), pageResults.getTotalCount(), jsonArr);
+		DataTablesPojo dataTablesPojo = new DataTablesPojo(sEcho,
+				pageResults.getTotalCount(), pageResults.getTotalCount(),
+				jsonArr);
 		return JSONObject.fromObject(dataTablesPojo).toString();
+	}
+
+	@RequestMapping(value = "/weixin/mpMenu/releaseMenu/{mpAccountId}", method = { RequestMethod.PUT }, produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public String releaseMenu(HttpServletRequest request, HttpSession session,
+			@PathVariable("mpAccountId") Long mpAccountId) throws Exception {
+		MpAccount mpAccount = mpAccountService.findByMpAccountId(mpAccountId);
+		if (mpAccount != null) {
+			JSONArray jsonArray = new JSONArray();
+			List<MpMenu> mpMenus = mpMenuService.findAllFirstLevelMenu(mpAccountId);
+			for(MpMenu mpMenu : mpMenus){
+				List<MpMenu> subMpMenu = mpMenuService.findAllSecondLevelMenu(mpMenu.getMpMenuId());
+				if(null == subMpMenu || subMpMenu.size() == 0){//没有子菜单
+					
+				}else{//有子菜单
+					JSONObject json = new JSONObject();
+					json.put("name", mpMenu.getMpMenuName());
+					json.put("type", mpMenu.getMpMenuType());
+//					if(mpMenu.getType().equals("view")){
+//						json.put("url", mpMenu.getUrl());
+//					}else if(menu.getType().equals("click")){
+//						json.put("key", mpMenu.getKey());
+//					}
+				}
+			}
+		}
+		return "";
 	}
 }

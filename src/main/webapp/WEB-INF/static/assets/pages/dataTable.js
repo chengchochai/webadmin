@@ -57,6 +57,9 @@ function draw(){
 		}
     });
 	$('#dataTables').DataTable().draw();//重新填充数据
+	if($('#addBtn').hasClass("disabled")){
+		$('#addBtn').removeClass("disabled")
+	};
 }
 
 /*

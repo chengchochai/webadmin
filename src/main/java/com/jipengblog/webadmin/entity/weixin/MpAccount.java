@@ -2,17 +2,12 @@ package com.jipengblog.webadmin.entity.weixin;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -57,7 +52,7 @@ public class MpAccount implements Serializable {
 	@Column(nullable = false, length = 50)
 	private String appSecret;// 微信分配给公众号的appSecret
 
-	@Column(nullable = false, length = 50)
+	@Column(nullable = false, length = 200)
 	private String appToken;// 与微信服务器建立链接时使用的token
 
 	@Column(nullable = false, length = 50)
@@ -133,5 +128,20 @@ public class MpAccount implements Serializable {
 	public void setAccessTokenDeadTime(Date accessTokenDeadTime) {
 		this.accessTokenDeadTime = accessTokenDeadTime;
 	}
+	
+	/**
+	 * 短格式的accessToken
+	 * @return
+	 */
+	public String getAccessTokenShort() {
+		if (accessToken == null) {
+			return "";
+		} else if (accessToken.length() <= 10) {
+			return accessToken;
+		} else {
+			return accessToken.substring(0, 10) + "...";
+		}
+	}
+
 
 }
